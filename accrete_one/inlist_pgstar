@@ -40,8 +40,8 @@
   grid2_plot_rowspan(2) = 2
   grid2_plot_pad_left(2) = -0.1
   grid2_plot_pad_right(2) = -0.04
-  grid2_plot_pad_top(2) = 0.16
-  grid2_plot_pad_bot(2) = -0.06
+  grid2_plot_pad_top(2) = 0.18
+  grid2_plot_pad_bot(2) = -0.08
 
   !!! TRho profile
   TRho_profile_xmax = 10.5d0
