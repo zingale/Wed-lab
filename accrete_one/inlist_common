@@ -166,6 +166,7 @@
   ! output
 
      profile_interval = 100000
+     history_interval = 1
 
   ! others
 
