@@ -1,0 +1,32 @@
+! this is an example of a weak rates list file for use with mesa/rates
+
+! pairs of rate name and rate file
+
+! the expected file format is HDF5 with the following datasets
+!
+! T9s            Dataset {N}         Temperature (T(K)/10^9)
+! lYeRhos        Dataset {M}         log10 of the electron fraction times the density (g*cm^-3)
+!
+! lcapture       Dataset {N, M}      log10 of electron or positron capture rate (s^-1)
+! ldecay         Dataset {N, M}      log10 of positron or electron emission rate (s^-1)
+! lneutrino      Dataset {N, M}      log10 of the neutrino energy loss rate (MeV * s^-1)
+
+! r_mg24_wk_na24 'on-the-fly_r_mg24_wk_na24.h5'
+! r_na24_wk-minus_mg24 'on-the-fly_r_na24_wk-minus_mg24.h5'
+r_mg24_wk_na24 'suzuki_r_mg24_wk_na24.h5'
+r_na24_wk-minus_mg24 'suzuki_r_na24_wk-minus_mg24.h5'
+
+! r_na24_wk_ne24 'on-the-fly_r_na24_wk_ne24.h5'
+! r_ne24_wk-minus_na24 'on-the-fly_r_ne24_wk-minus_na24.h5'
+r_na24_wk_ne24 'suzuki_r_na24_wk_ne24.h5'
+r_ne24_wk-minus_na24 'suzuki_r_ne24_wk-minus_na24.h5'
+
+! r_mg25_wk_na25 'on-the-fly_r_mg25_wk_na25.h5'
+! r_na25_wk-minus_mg25 'on-the-fly_r_na25_wk-minus_mg25.h5'
+r_mg25_wk_na25 'suzuki_r_mg25_wk_na25.h5'
+r_na25_wk-minus_mg25 'suzuki_r_na25_wk-minus_mg25.h5'
+
+! r_na23_wk_ne23 'on-the-fly_r_na23_wk_ne23.h5'
+! r_ne23_wk-minus_na23 'on-the-fly_r_ne23_wk-minus_na23.h5'
+r_na23_wk_ne23 'suzuki_r_na23_wk_ne23.h5'
+r_ne23_wk-minus_na23 'suzuki_r_ne23_wk-minus_na23.h5'
