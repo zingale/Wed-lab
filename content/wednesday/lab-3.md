@@ -59,15 +59,6 @@ Nothing to do.
 
 {{< /details >}}
 
-{{< details title="ONeMg.net" closed="true" >}}
-
-{{< details title="Partial solution" closed="true" >}}
-
-Nothing to do. 
-
-{{< /details >}}
-
-{{< /details >}}
 
 
 ### Step 4: Changing the rates
