@@ -51,7 +51,6 @@ In `&controls`, set `mass_change = <your value>`.
 
 ### Step 3: Changing your net
 
-Our base net `ONe.net` contains the basic reactions for oxygen ignition, namely the reaction $^{16}\rm{O} + \,^{16}\rm{O} \to \alpha+\,^{28}\rm{Si}$, .. Depending on the net you chose in the spreadsheet, you will modify your net accordingly to include more weak reactions. 
 
 | 📋 TASK 3 |
 |:--------|
