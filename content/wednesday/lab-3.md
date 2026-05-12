@@ -47,19 +47,24 @@ In `&controls`, set `mass_change = <your value>`.
 
 {{< /details >}}
 
-
-
-### Step 3: Changing your net
-
+### Step 3: Build your network
 
 | 📋 TASK 3 |
 |:--------|
-| **Edit `my.net`** to set the reaction network. **Click on the tabs below** to review the instructions for your specific net. |
+| Edit `<name of your net>.net` to add the nuclear species and reactions connecting them. **Click on the tabs below** to review the instructions for your specific net. |
 
 {{< details title="ONe.net" closed="true" >}}
+The network should include ${^{16}\rm{O}},{^{20}\rm{Ne}}$. 
+{{< /details >}}
 
+### Step 4: Use your network
+
+| 📋 TASK 4 |
+|:--------|
+| Edit `inlist_accrete` to have it use your specific network. |
+
+{{< details title="ONe.net" closed="true" >}}
 Nothing to do. 
-
 {{< /details >}}
 
 
