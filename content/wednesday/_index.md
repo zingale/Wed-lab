@@ -11,3 +11,4 @@ toc: false
  {{< card link="lab-2/" title="Lab 2: Getting in Debt" >}}
  {{< card link="lab-3/" title="Lab 3: They All Go Broke" >}}
 {{< /cards >}}
+
