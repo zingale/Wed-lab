@@ -16,9 +16,9 @@ disableKinds: "rss"
 
 ### Helpful Links
 
-The general Google drive for these Wednesday labs can be found [HERE]( FIXLINK ). 
+The general Google drive for these Wednesday labs can be found [HERE](https://drive.google.com/drive/folders/1OkVI_D5ilrETjjRzcqswcafA9bwROWfV?usp=drive_link). 
 
-More specifically, the files for Lab 1 can be found [HERE]( FIXLINK ). This drive contains the starting point, partial solutions (separated by task), and a full solution. You do **not** need to download the entire drive!
+More specifically, the files for Lab 1 can be found [HERE](https://drive.google.com/drive/folders/1Pht6YvypYnXKGyDYzHVphCF7SZQ7MYAL?usp=drive_link). This drive contains the starting point, partial solutions (separated by task), and a full solution. You do **not** need to download the entire drive!
 
 Lastly, it will be helpful to consult the [MESA documentation](https://docs.mesastar.org/en/latest/) throughout this lab.
 
@@ -47,7 +47,7 @@ Values that need to be altered in the files will generally be marked with `!!!!!
 
 | 📋 TASK 1 |
 |:--------|
-| **Download** the starting point from the [Google Drive]( FIXLINK ) to a local working directory. |
+| **Download** the starting point from the [Google Drive](https://drive.google.com/drive/folders/1Pht6YvypYnXKGyDYzHVphCF7SZQ7MYAL?usp=drive_link) to a local working directory. |
 
 This starting point is a standard set of MESA files complete with a precomputed 1.1 M<sub>&#9737;</sub> Oxygen-Neon (ONe) white dwarf model.
 
@@ -127,12 +127,8 @@ The parameters that should be updated/added are:
     set_initial_model_number = .true. !!!!!
     initial_model_number = 0          !!!!!
 
-  ! coulomb corrections
-    ion_coulomb_corrections = 'PCR2009'
-    electron_coulomb_corrections = 'Itoh2002'
-
   ! display on-screen plots
-    pgstar_flag = .true.
+    pgstar_flag = .true.          !!!!!
     disable_pgstar_during_relax_flag = .false.
 ```
 {{< /details >}}
@@ -163,7 +159,7 @@ The parameter that should be added is:
 
 ### Step 3: Inlist Accrete
 
-With the common variables set, now we can focus on the fun part: throwing material on the surface. We will control the reaction network of the model and the material accreted within `inlist_accrete`. Unlike our previous inlist, this file is mostly empty. 
+With the common variables set, now we can focus on the fun part: throwing material on the surface. We will control the reaction network of the model and the material accreted within `inlist_accrete`. Unlike our previous inlist, this file has been provided mostly empty. 
 
 Starting in `&star_jobs`, load in the downloaded model `1.1Msun_ONe.mod`, change the initial network to a file we will later create called `ONe.net`, and set the weak rates to those of Suzuki+2016[^1]. These Suzuki rates are critical for the treatment of degenerate O-Ne-Mg cores as these sd-shell electron capture and β-decay rates drive the URCA process. 
 
@@ -173,7 +169,7 @@ Starting in `&star_jobs`, load in the downloaded model `1.1Msun_ONe.mod`, change
 | In `&star_jobs`, **update `inlist_accrete`** to load the `1.1Msun_ONe` model, change the initial nuclear network to `ONe.net`, and use the Suzuki rates.|
 
 > [!NOTE]
-> Remember, paths provided in the inlists are relative to the relavant `rn` executable. 
+> Remember, paths provided in the inlists are relative to the relevant `rn` executable. 
 
 {{< details title="Hint: What variables need to be changed?" closed="true" >}}
 The parameters that should be added are:
@@ -270,14 +266,138 @@ Therefore, if we wanted to accrete only Hydrogen-2, we would use:
 
 ### Step 4: Building a Nuclear Network
 
+As you may have guessed from our prior flags to change the initial net, MESA allows for the creation of custom reaction networks. The default net, `basic.net`, is a sufficient case for basic hydrogen and helium burning on the main sequence, but insufficient for more detailed nucleosynthesis studies. In general, the use of a particular network should be motivated by the physics that one seeks to explore traded against the additional computational time required on larger nets. Take a look over the format and structure of this default reaction network.
 
 | 📋 TASK 1 |
 |:--------|
-| **update `ONe.net`** to include the above isotopes |
+| **Open `basic.net`**, peruse the included isotopes and reactions, and take note of the format |
+
+> [!NOTE]
+> The reaction networks included in MESA can be found at `$MESA_DIR/data/net_data/nets/`
+
+
+In pursuit of our central question, "implode or explode", the critical physics is whether our ONe white dwarf enters thermal runaway, producing an electron capture supernova (ECSNe) or collapse under its own gravity as a collapsing ECSNe (cECSNe).  This balance requires a nuclear network that accounts for the critical electron-capture chain Neon-20 -> Fluorine-20 -> Oxygen-20 and the burning of Oxygen-16 to Silicon-28. An overview of each of these reactions is below:
+| Reaction                     | Equation                                                         |
+|------------------------------|------------------------------------------------------------------|
+| $\beta$ : Ne-20 -> F-20      | $$\ce{^{20}_{10}Ne + e- -> ^{20}_{9}F + \nu_e}$$                 |
+| $\beta^-$ : F-20  -> Ne-20   | $$\ce{^{20}_{9}F -> ^{20}_{10}Ne + e- + \bar{\nu}_e}$$           |
+| $\beta$ : F-20  -> O-20      | $$\ce{^{20}_{9}F + e- -> ^{20}_{8}O + \nu_e}$$                   |
+| $\beta^-$ : O-20  -> F-20    | $$\ce{ ^{20}_{8}O -> ^{20}_{9}F + e- + \bar{\nu}_e}$$            |
+| O-16 Burning                 | $$\ce{^{16}_{8}O + ^{16}_{8}O -> ^{28}_{14}Si + ^4_2\text{He}}$$ |
+
+
+To implement this physics into our ONe white dwarf, start by creating the new `ONe.net` file in the working directory and adding the necessary isotopes.
 
 | 📋 TASK 1 |
 |:--------|
-| **update `ONe.net`** to include the above isotopes |
+| **Create a new file `ONe.net`**, and **add the necessary isotopes** to encompass the reactions in the table above. |
+
+> [!NOTE]
+> You should also add Hydrogen (h1) to the mix! TODO, PROVIDE AN ACTUAL EXPLANATION WHY
+
+{{< details title="Hint: What isotopes need to be added?" closed="true" >}}
+The isotopes that should be added are:
+- Hydrogen-1 
+- Helium-4
+- Oxygen-16
+- Neon-20 
+- Fluorine-20
+- Oxygen-20 
+- Silicon-28
+{{< /details >}}
+
+{{< details title="Hint: What is the format to add an isotope" closed="true" >}}
+To add an a group of isotopes, use 
+```fortran
+add_isos(
+    iso_i
+    iso_ii
+    ...
+    iso_n
+	)
+```
+
+Isotopes of the same element can either be written separately on new lines, or written on the same line with mass numbers separated by a space (ie. `Zn64 \n Zn66` or `Zn 64 66` where \n is a newline)
+{{< /details >}}
+
+{{< details title="Partial Solution" closed="true" >}}
+```fortran
+!!!!! Add Isotopes
+add_isos(
+     h1
+	 ! for Ne20 - F20 - O20
+	 ne20
+	 f20
+	 o20
+	 ! for O ignition
+	 he4
+     o16
+	 si28
+	 )
+```
+{{< /details >}}
+
+
+With the isotopes added, we may now move to add specific reactions. Again, the consideration of reactions should depend on the physics in question. As previously mentioned, we only need to include the four $\beta$/$\beta^-$ reactions and oxygen-16 burning, as described in the table. Add these reactions to `ONe.net`
+
+| 📋 TASK 1 |
+|:--------|
+| In `ONe.net`, **add the reactions from the table above**. |
+
+> [!NOTE]
+> Use the MESA documentation to find the `reaction_handle` (ie. reaction name) format for the standard 1-to-1 weak reactions.
+> For oxygen burning, the `reaction_handle` can be found in `$MESA_DIR/data/rates_data/reactions.list`.
+
+{{< details title="Hint: What is the format of the standard 1-to-1 weak reactions " closed="true" >}}
+The following information can be found [here](https://docs.mesastar.org/en/latest/net/nets.html#description-of-net-format) under `reaction_handle`.
+$\beta$ reactions (positron emission or electron capture) between reactant x and product y follow the naming r_x_wk_y 
+$\beta^-$ reactons (electron emission or positron capture) between reactant x and product y follow the naming r_wk-minus_y
+
+Note, x and y are the abbreviated isotope names (ie. Uranium-238 would be `u238`)
+{{< /details >}}
+
+{{< details title="Hint: Where is the oxygen burning rate in `reactions.list`?" closed="true" >}}
+It is the first entry describing 2 Oxygen-16's turning into Helium-4 and Silicon-28. The correct line can be found by searching the file for `2 o16`. The `reaction_handle` is then in the first column.
+{{< /details >}}
+
+{{< details title="Hint: Required reactions for Ne20, F20, O20" closed="true" >}}
+ - `r_ne20_wk_f20`
+ - `r_f20_wk-minus_ne20`
+ - `r_f20_wk_o20`
+ - `r_o20_wk-minus_f20`
+{{< /details >}}
+
+{{< details title="Hint: `reaction_handle` for Oxygen-burning" closed="true" >}}
+ - `r1616`
+{{< /details >}}
+
+{{< details title="Hint: What is the format to add a reaction" closed="true" >}}
+To add an a set of reactions, use 
+```fortran
+add_reactions(
+	reaction_i
+	reaction_ii
+	...
+	reaction_n
+	)
+```
+{{< /details >}}
+
+{{< details title="Partial Solution" closed="true" >}}
+```fortran
+!!!!! Add Reactions
+add_reactions(
+	! for oxygen ignition
+	r1616
+
+	! for Ne20 - F20 - O20
+	r_ne20_wk_f20
+	r_f20_wk-minus_ne20
+	r_f20_wk_o20
+	r_o20_wk-minus_f20
+	)
+```
+{{< /details >}}
 
 > [!WARNING]
 > Don't forget to save your changes!
