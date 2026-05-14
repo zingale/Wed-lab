@@ -593,12 +593,17 @@ With all the inlists complete, we can finally answer the age old question: **Wil
 > [!IMPORTANT]
 > Do not forget to `./clean`, then `./mk`, then `./rn`
 
+> [!NOTE]
+> If you want to look at the final pgplot longer, try adding `pause_before_terminate = .true.` into the `&star_jobs` section of `inlist_common`. 
+
 {{< details title="What you should see" closed="true" >}}
-TODO
+Note: This gif stacks both the pgstar plots, but they will be separate during the run!
+
+![landscape](/wednesday/Lab1_CombinedPGstar.gif)
 {{< /details >}}
 
 {{< details title="Does the lambda balance make sense?" closed="true" >}}
-TODO
+Yes! Broadly, we should expect $\lambda_{^{20}F->^{20}O}$ to be greater than $\lambda_{^{20}O->^{20}F}$ at high densities and vice versa at low densities. This can be seen in the lambda-rho plot with the two curves cross at logRho ~ 9.
 
 {{< /details >}}
 
@@ -610,9 +615,9 @@ TODO
 *Figure 8, from Holas+26: Outcomes of 3D hydrodynamic simulations by ignition location and central density at ignition. The dashed and dotted lines indicate the transition from explosion to collapse for the TW92 and S20 flame speeds, respectively.* [^2]
 
 {{< details title="Does it blow up?" closed="true" >}}
-Yes! The central density at ignition should be ~ . 
+Yes! The central density at ignition should be ~ $10^9.924$ cgs. This is firmly within the purely explosive regime below ~ $10^9.97$ cgs. Despite choices of flame speed and the degree to which the ignition location is off-center, these 3D simulations suggest the model would have exploded. 
 
-Despite choices of flame speed and the degree to which the ignition location is off-center, these 3D simulations suggest the model would have exploded. Of course, there are a number of caveats in that the MESA models in this lab are just toy models with quite a bit of softening to reduce runtimes. This necessarily changes the physics in question alongside the massively reduced nuclear network used in this lab. 
+Of course, there are a number of caveats in that the MESA models in this lab are just toy models with quite a bit of softening to reduce runtimes. This necessarily changes the physics in question alongside the massively reduced nuclear network used in this lab. 
 {{< /details >}}
 
 
