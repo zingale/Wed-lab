@@ -21,8 +21,21 @@ The goal is to look at how they change the core properties at the onset of oxyge
 |:--------|
 | **Download** the starting point from the [Google Drive]( FIXLINK ) to a local working directory. |
 
-The starting point is a very simple setup. 
+The starting point is a very simple setup. It should look like:
 
+{{< filetree/container >}}
+  {{< filetree/folder name="lab3_start_point" >}} 
+    {{< filetree/file name="inlist" >}} 
+    {{< filetree/file name="inlist_common" >}} 
+    {{< filetree/file name="inlist_accrete" >}} 
+    {{< filetree/file name="inlist_net" >}} 
+    {{< filetree/file name="inlist_rates" >}} 
+    {{< filetree/file name="other things" >}} 
+  {{< /filetree/folder >}}
+{{< /filetree/container >}}
+
+>[!NOTE]
+> In this lab, you will only need to edit `inlist_accrete`, `inlist_net`, and `inlist_rates`. 
 
 ### Step 1: Pick a model
 
@@ -35,11 +48,13 @@ The starting point is a very simple setup.
 
 | 📋 TASK 3 |
 |:--------|
-| Edit `inlist_accrete` to set the accretion rate that you chose. |
+| **Edit `inlist_accrete`** to set the accretion rate that you chose. |
 
 
 
-{{< details title="What variable needs to be changed?" closed="true" >}}
+{{< details title="Hint: what inlist option needs to be changed?" closed="true" >}}
+
+This is called `mass_change` in the `&controls` section. 
 
 {{< /details >}}
 
@@ -47,28 +62,32 @@ The starting point is a very simple setup.
 
 {{< details title="Partial solution" closed="true" >}}
 
-In `&controls`, set `mass_change = <your value>`. 
+In `&controls` of your `inlist_accrete`, set `mass_change = <your value>`. 
 
 {{< /details >}}
 
 ### Step 3: Set your network
 
-You've done the hard work in labs 1 and 2 to implement custom networks. So here we will supply the networks you will need. 
+You've done great work in labs 1 and 2 to implement custom network, so here we will just supply the networks need. 
 
 | 📋 TASK 3 |
 |:--------|
-| **Edit `inlist_rates`** to have it use your specific network, which we supply in **`nets_lab3`**. |
+| **Edit `inlist_net`** to have it use your specific network, which we supply in **`nets_lab3`**. |
 
-> [!TIP]
-> You can do the following sanity check: 
-> In ``star_job`` in ``inlist_common``, set ``show_net_species_info = .true.`` and ``show_net_reactions_info = .true.``. 
-> Then do ``./rn`` and let MESA run for a few steps. MESA will first print out the species and reactions in the net. 
-> Once you see that, just do ``ctrl+c`` to stop. 
+{{< details title="Hint: which inlist options?" closed="true" >}}
+You can easily search for this: 
+```fortran
+grep -r net $MESA_DIR/star/defaults
+```
+{{< /details >}}
 
-> [!WARNING]
-> If you haven't yet, do ``./clean && ./mk`` first.
-
-
+{{< details title="Hint: partial solutions" closed="true" >}}
+Add the following in your ``inlist_net``: 
+```fortran
+change_initial_net = .true.
+new_net_name = 'nets_lab3/<name>.net'
+```
+{{< /details >}}
 
 ### Step 4: Set reaction rate source
 
@@ -90,7 +109,7 @@ Check the Google spreadsheet [here](https://docs.google.com/spreadsheets/d/15PK9
 
 | 📋 TASK 5 |
 |:--------|
-| **Edit your inlist** to ask MESA to use Suzuki weak rates. |
+| **Edit your ``inlist_rates``** to ask MESA to use Suzuki weak rates. |
 
 {{< details title="Hint: which inlist option?" closed="true" >}}
 You can easily search for this: 
@@ -100,7 +119,7 @@ grep -r suzuki $MESA_DIR/star/defaults
 {{< /details >}}
 
 {{< details title="Partial solutions" closed="true" >}}
-You need this one line in your ``star_job`` section of your inlist:
+You need this one line in your ``star_job`` section of your ``inlist_rates``:
 ```fortran
 use_suzuki_weak_rates = .true.
 ```
@@ -137,7 +156,7 @@ grep -r rate_table $MESA_DIR/star/defaults/
 {{< details title="Partial Solution" closed="true" >}}
 Add the following to the ``star_job`` section of your inlist:
 ```fortran
-rate_table = 'tables_custom'
+rate_tables_dir = 'tables_custom'
 ```
 
 You will also need to ask MESA to **not** use Suzuki weak rates, in the ``star_job`` section:
@@ -151,7 +170,7 @@ use_suzuki_weak_rates = .false.
 
 | 📋 TASK 4b |
 |:--------|
-| **Download** the weak rate tables [here]() to your working directory and **unzip** it. |
+| **Download** the weak rate tables [here](https://drive.google.com/file/d/1qtQLwOf2qovA8pI5miiD6kxgNBJVe28x/view?usp=drive_link) to your working directory and **unzip** it. |
 
 After that, your working directory should look like:
 
@@ -189,7 +208,7 @@ The format is as follows:
 ```fortran
 <reaction name> <h5 file name>
 ```
-{{< details title="What is the reaction name format again?" closed="true" >}}
+{{< details title="Hint: what is the reaction name format?" closed="true" >}}
 For electron capture reactions ($X + e^{-} \to Y + \nu_{e}$), the format is `r_x_wk_y`. 
 For beta decay reactions ($Y \to X + e^{-} + \bar{\nu}_{e}$), the format is `r_x_wk-minus_y`. 
 {{< /details >}}
@@ -233,9 +252,14 @@ grep -r special_weak $MESA_DIR/star/defaults/
 
 {{< details title="Partial solution" closed="true" >}}
 
-In `&star_job`, set
+In `&star_job` of your `inlist_rates`, set
 ```fortran
 use_special_weak_rates = .true.
+```
+
+You will also need to ask MESA to **not** use Suzuki weak rates, in the ``star_job`` section:
+```fortran
+use_suzuki_weak_rates = .false.
 ```
 
 {{< /details >}}
@@ -247,7 +271,7 @@ For MESA to calculate the weak rates, it needs to know the nuclear states of the
 
 | 📋 TASK 4b |
 |:--------|
-| **Download** the states file and the transition file [here]() to your working directory. |
+| **Download** the states file and the transition file [here](https://drive.google.com/file/d/1JWbVpgbDwPfDwaaJ_LnmkfExNxZ4BAUY/view?usp=drive_link) and [here](https://drive.google.com/file/d/10wsOlGsfWX_vjepwX9Fk9gjvkix-o6ml/view?usp=drive_link) to your working directory. |
 
 | 📋 TASK 4c |
 |:--------|
@@ -267,8 +291,8 @@ grep -r special_weak $MESA_DIR/star/defaults/
 
 In `&star_job`, set
 ```fortran
-special_weak_states_file = 'special_weak_rates.states'
-special_weak_transitions_file = 'special_weak_rates.transitions'
+special_weak_states_file = 'weak.states'
+special_weak_transitions_file = 'weak.transitions'
 ```
 
 {{< /details >}}
@@ -277,15 +301,47 @@ special_weak_transitions_file = 'special_weak_rates.transitions'
 
 {{< /tabs >}}
 
-
-
-Now you're ready to go!
-
-### Step 5: Declaring Bankrupcy
+### Step 5: Change Log Directory
 
 | 📋 TASK 5 |
 |:--------|
+| Finally, change the output directory to something you name. |
+
+A suggested format is something like ``LOGS_<accretion rate>_<net name>_<weak rate name>``. 
+
+{{< details title="Hint: what inlist option to use?" closed="true" >}}
+
+This is called ``log_directory``. You can easily search this:
+```bash
+grep -r log_directory $MESA_DIR/star/defaults/
+```
+
+{{< /details >}}
+
+{{< details title="Partial solution" closed="true" >}}
+
+In `&controls` of your `inlist_rates`, set something like, 
+```fortran
+log_directory = "LOGS_1d-6_ONe_custom"
+```
+
+{{< /details >}}
+
+Now you're ready to go!
+
+### Step 6: Declaring Bankrupcy
+
+| 📋 TASK 6 |
+|:--------|
 | The only thing stopping your white dwarf from getting bankrupt is just you hitting ``./rn``. **Record the central density of your model in the Google spreadsheet [here](https://docs.google.com/spreadsheets/d/15PK9myW3oriuTeZvGFNGRKHqqphOHUFQoOcShtuME-g/edit?gid=0#gid=0)** at the end of the run. |
+
+> [!TIP]
+> You can do the following sanity check to see if you're using the correct net: 
+> In ``star_job`` in ``inlist_net``, set ``show_net_species_info = .true.`` and ``show_net_reactions_info = .true.``. 
+> Then do ``./rn`` and let MESA run for a few steps. MESA will first print out the species and reactions in the net. 
+
+> [!TIP]
+> If you're using **custom rates**, when MESA first runs, you should see messages like ``reading user weak rate file tables_custom/on-the-fly_r_mg24_wk_na24.h5``. 
 
 > [!WARNING]
 > If you haven't yet, do ``./clean && ./mk`` first.
@@ -301,6 +357,7 @@ Go to [this](blah) Google colab notebook and go through the exercises.
 We have done many things in this lab to ensure short runtimes. Here are a few suggested exercises you can try towards building a better model. 
 
 Do **not** attempt these all at once! Your run will be unbearably slow. 
+
 
 {{< tabs items="Bigger Net,Soft-wired Net,Time Resolution,Spatial Resolution,Skye EOS,Name Your Bison" >}}
 
@@ -336,11 +393,10 @@ But if you open ``$MESA_DIR/data/rates_data/reactions.list`` and go to line 124,
 ```bash
 o16+o16 => a + si28, a and p
 ```
-The ``o16+o16`` reaction doesn't always give an alpha particle ($^{4}\rm{He}$) as a product. It sometimes returns a proton as a product (${^{16}\rm{O}} + {^{16}\rm{O}} \to {p} + {^{31}\rm{P}}$), but the `r1616` combines both the `a` and `p` channels in the energy released. To keep our nuclear net small, we left out $^{31}\rm{P}$, 
-
-
 
 {{< /details >}}
+
+The ``o16+o16`` reaction doesn't always give an alpha particle ($^{4}\rm{He}$) as a product. It sometimes returns a proton as a product (${^{16}\rm{O}} + {^{16}\rm{O}} \to {p} + {^{31}\rm{P}}$). To keep our nuclear net small, we purposely left out $^{31}\rm{P}$. The `r1616` rate combines both the `a` and `p` channels, but uses ${^{28}\rm{Si}}$ as the end point. 
 
 
 #### Other important reactions
