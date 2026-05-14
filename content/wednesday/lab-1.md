@@ -424,16 +424,31 @@ The following profile column outputs have been added as well information about o
 
 ### Step 6: Inlist Pgstar
 
-Within the white dwarf interior, there should be some preference for electron capture ($\beta$) over electron emission ($\beta^-$). Therefore, the rate of F-20 -> O-20 ($\lambda_{^{20}F->^{20}O}$) should be higher than the rate of O-20 -> F-20 ($\lambda_{^{20}O->^{20}F}$) at high densities.
+Within the white dwarf interior, there should be some preference for electron capture ($\beta$) over electron emission ($\beta^-$), as the availability of "free" electron levels fills up with increasing density. Therefore, the rate of Ne-20 -> F-20 ($\lambda_{^{20}Ne->^{20}F}$) should be higher than the rate of F-20 -> Ne-20 ($\lambda_{^{20}F->^{20}Ne}$) at high densities.
 
-The provided `inlist_pgstar` has been mostly preformatted to show exactly this given some values to be created in `run_star_extras.f90`. Set `profile_panels1_yaxis_name(1)` to `lambda_f20_o20` and `profile_panels1_other_yaxis_name(1)` to `lambda_o20_f20`.
+The provided `inlist_pgstar` has been mostly preformatted to show exactly this given some values to be created in `run_star_extras.f90`. Set `profile_panels1_yaxis_name(1)` to `lambda_ne20_f20` and `profile_panels1_other_yaxis_name(1)` to `lambda_f20_ne20`.
 
 | 📋 TASK 9 |
 |:--------|
-| In `inlist_pgstar`, **Set** `profile_panels1_yaxis_name(1)` to `lambda_f20_o20` and `profile_panels1_other_yaxis_name(1)` to `lambda_o20_f20`   |
+| In `inlist_pgstar`, **Set** `profile_panels1_yaxis_name(1)` to `lambda_ne20_f20` and `profile_panels1_other_yaxis_name(1)` to `lambda_f20_ne20`   |
+
+{{< details title="Partial Solution" closed="true" >}}
+```fortran
+profile_panels1_yaxis_name(1) = 'lambda_ne20_f20' !!!!!
+profile_panels1_yaxis_log(1) = .true.
+profile_panels1_ymin(1) = -40d0
+profile_panels1_ymax(1) = 5d0
+
+profile_panels1_other_yaxis_name(1) = 'lambda_f20_ne20' !!!!!
+profile_panels1_other_yaxis_log(1) = .true.
+profile_panels1_other_ymin(1) = -40d0
+profile_panels1_other_ymax(1) = 5d0
+```
+{{< /details >}}
+
 
 > [!NOTE]
-> With these inclusions, the provided `inlist_pgstar` will be expecting two new profile columns: `lambda_f20_o20`, `lambda_o20_f20`
+> With these inclusions, the provided `inlist_pgstar` will be expecting two new profile columns: `lambda_ne20_f20`, `lambda_f20_ne20`
 
 > [!WARNING]
 > Don't forget to save your changes!
@@ -504,7 +519,7 @@ Starting at the top of the subroutine, the set of necessary pointers, arrays, do
 
 | 📋 TASK 12 |
 |:--------|
-| In `run_star_extras`, **set** the new profile names to `lambda_f20_o20` and `lambda_o20_f20`. Then, **set** `weak_lhs` and `weak_rhs` to the reactant (left-hand side) species name and product (right-hand side) species name for each reaction. |
+| In `run_star_extras`, **set** the new profile names to `lambda_ne20_f20` and `lambda_f20_ne20`. Then, **set** `weak_lhs` and `weak_rhs` to the reactant (left-hand side) species name and product (right-hand side) species name for each reaction. |
 
 > [!NOTE]
 > The species name is the abbreviated isotopic name (ie. Helium-4 is h4).
@@ -521,16 +536,16 @@ weak_rhs(2) = 'n14'
 {{< details title="Partial Solution" closed="true" >}}
 ```fortran
 ! Set names for new profile columns
-names(1) = 'lambda_f20_o20' !!!!!
-names(2) = 'lambda_o20_f20' !!!!!
+names(1) = 'lambda_ne20_f20' !!!!!
+names(2) = 'lambda_f20_ne20' !!!!!
 
 ! Set the names of species on the left and right hand side for each of the new profile columns
 ! ie. weak_lhs(1) corresponds to the reactant (left-hand) species for names(1) and weak_lhs(2) corresponds to the reactant (left-hand) species for names(2)
-weak_lhs(1) = 'f20' !!!!!
-weak_rhs(1) = 'o20' !!!!!
+weak_lhs(1) = 'ne20' !!!!!
+weak_rhs(1) = 'f20'  !!!!!
 
-weak_lhs(2) = 'o20' !!!!!
-weak_rhs(2) = 'f20' !!!!!
+weak_lhs(2) = 'f20'  !!!!!
+weak_rhs(2) = 'ne20' !!!!!
 ```
 {{< /details >}}
 
@@ -588,7 +603,10 @@ With all the inlists complete, we can finally answer the age old question: **Wil
 
 | 📋 TASK 14 |
 |:--------|
-| **Run** the model! Observe the behavior and evolution of the star up to oxygen ignition. Does the balance of lambda values make sense? |
+| **Run** the model! Observe the behavior and evolution of the star up to oxygen ignition. Does the balance of lambda values make sense? Does the crossing point agree with Figure 4 from Pinedo+14[^3] (below)? |
+![landscape](/wednesday/Pinedo+14_Fig4.png)
+*Figure 4, from Pinedo+18: Electon capture and beta decay rates on $\ce{^{20}Ne<->^{20}F}$ with and without screening. Top panel log(T[K]) = 8.6. Bottom panel log(T[K]) = 9.0* [^3]
+
 
 > [!IMPORTANT]
 > Do not forget to `./clean`, then `./mk`, then `./rn`
@@ -603,22 +621,42 @@ Note: This gif stacks both the pgstar plots, but they will be separate during th
 {{< /details >}}
 
 {{< details title="Does the lambda balance make sense?" closed="true" >}}
-Yes! Broadly, we should expect $\lambda_{^{20}F->^{20}O}$ to be greater than $\lambda_{^{20}O->^{20}F}$ at high densities and vice versa at low densities. This can be seen in the lambda-rho plot with the two curves cross at logRho ~ 9.
+Yes! Broadly, we should expect $\lambda_{^{20}Ne->^{20}F}$ to be greater than $\lambda_{^{20}F->^{20}Ne}$ at high densities due to the effects of pauli blocking. At lower densities, the opposite should be true as $^{20}F$ spontaneously decays wihout enough energy to do electron capture on $^{20}Ne$.
 
+Further, the crossing point of the two curves generally agrees with the work of Pinedo+14 both by eye and when looking at the values in the associated profile columns. The profile columns provide a crossing point at log($\rho$) ~ 9.86 and log(T)~8.9. With a simple interpolation on the two panels of figure 4 from Pinedo+14, we can suspect that with log(T)~8.9, this matches the crossing point. (Note: Ye = 0.5 for our ONe white dwarf)
+
+Final lambda plot:
+![landscape](/wednesday/Lab1_FinalLambda.png)
 {{< /details >}}
 
 | 📋 TASK 15 |
 |:--------|
-| **Review** the central density of the model at ignition by looking either at the pgstar plot or in `profile.data`. Using this value and Figure 8 from Holas+26[^2] (below), assuming that ignition is perfectly centered, does your model explode or implode? Does the assumption of wave speed or radius of ignition change the result?|
-
+| **Review** the central density of the model at ignition by looking either at the pgstar plot or in `profile.data`. Using this value and Figure 8 from Holas+26[^2] (below), assuming that ignition is perfectly centered, does your model explode or implode? Does the assumption of wave speed or radius of ignition change the result? Can you identify the radius if the ignition from the resulting profile? |
 ![landscape](/wednesday/Holas+26_Fig8.png)
 *Figure 8, from Holas+26: Outcomes of 3D hydrodynamic simulations by ignition location and central density at ignition. The dashed and dotted lines indicate the transition from explosion to collapse for the TW92 and S20 flame speeds, respectively.* [^2]
 
 {{< details title="Does it blow up?" closed="true" >}}
-Yes! The central density at ignition should be ~ $10^9.924$ cgs. This is firmly within the purely explosive regime below ~ $10^9.97$ cgs. Despite choices of flame speed and the degree to which the ignition location is off-center, these 3D simulations suggest the model would have exploded. 
+Yes! The central density at ignition should be ~ $10^{9.924}$ cgs. This is firmly within the purely explosive regime below ~ $10^{9.97}$ cgs for any radius or flame speed. Looking to the profile columns, the peak temperature does not occur in the center, but at a radius of ~ 65 km, making the required densities much greater. Despite choices of flame speed and the degree to which the ignition location is off-center, these 3D simulations suggest the model would have exploded. 
+
+
 
 Of course, there are a number of caveats in that the MESA models in this lab are just toy models with quite a bit of softening to reduce runtimes. This necessarily changes the physics in question alongside the massively reduced nuclear network used in this lab. 
 {{< /details >}}
+
+
+## BONUS: What about our other weak rate?
+
+If you have time, try to gather the same information about the lambda balance for $\ce{^{20}F<->^{20}O}$. To implement this, try extending the `run_star_extras` code! Don't forget to replace/reformat the `eps_nuc_neu_total` and `non_nuc_neu` plots in `inlist_pgstar`, to see all of them together. Does there appear to be any relation to temperature?
+
+> [!NOTE]
+> The relevant arrays can all be extended trivially for this case, but don't forget to increase the integer value of `nr`!
+
+{{< details title="What you should see" closed="true" >}}
+Yes, there is a relationship to temperature! At sufficiently high temperature, the rate of beta decay begins to increase again with contributions from forbidden transitions and a reduction in pauli blocking. 
+
+![landscape](/wednesday/Lab1_BONUS1.gif)
+{{< /details >}}
+
 
 
 ## BONUS: Magnetization Station
@@ -630,3 +668,4 @@ Magnetic fields can alter the interior structure of white dwarfs, driving higher
 ## References
 [^1]: Suzuki, Toshio, Hiroshi Toki, and Ken’ichi Nomoto. "Electron-capture and β-decay rates for sd-shell nuclei in stellar environments relevant to high-density O–Ne–Mg cores." The Astrophysical Journal 817, no. 2 (2016): 163. https://iopscience.iop.org/article/10.3847/0004-637X/817/2/163.
 [^2]: Holas, Alexander, Samuel W. Jones, Friedrich K. Röpke, Rüdiger Pakmor, Christina Fakiola, Giovanni Leidi, Raphael Hirschi, and Ken J. Shen. "Drawing the line between explosion and collapse in electron-capture supernovae." (2026). https://www.aanda.org/articles/aa/pdf/2026/03/aa57910-25.pdf.
+[^3]: Martínez-Pinedo, G., Y. H. Lam, K. Langanke, R. G. T. Zegers, and C. Sullivan. "Astrophysical weak-interaction rates for selected A= 20 and A= 24 nuclei." Physical Review C 89, no. 4 (2014): 045806. https://journals.aps.org/prc/pdf/10.1103/PhysRevC.89.045806
