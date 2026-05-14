@@ -28,7 +28,7 @@ The starting point is a very simple setup.
 
 | 📋 TASK 2 |
 |:--------|
-|  Go to the spreadsheet [here]( FIXLINK ). Pick any combination of the accretion rate, reaction network and reaction rates provided. Users with more cores should pick more computationally expensive ones. |
+|  Go to the spreadsheet [here]( https://docs.google.com/spreadsheets/d/15PK9myW3oriuTeZvGFNGRKHqqphOHUFQoOcShtuME-g/edit?gid=0#gid=0 ). Pick any combination of the accretion rate, reaction network and reaction rates provided. Users with more cores should pick more computationally expensive ones. |
 
 
 ### Step 2: Changing the accretion rate
@@ -51,349 +51,13 @@ In `&controls`, set `mass_change = <your value>`.
 
 {{< /details >}}
 
-### Step 3: Build your network
+### Step 3: Set your network
+
+You've done the hard work in labs 1 and 2 to implement custom networks. So here we will supply the networks you will need. 
 
 | 📋 TASK 3 |
 |:--------|
-| **Edit `example.net`** to add the nuclear species and reactions connecting them. **Click on the tabs below** to review the instructions for your specific net. |
-
-> [!NOTE]
-> Some of these nets are the same in labs 1 and 2. Feel free to use them. Check the general hints if you need help. 
-
-{{< tabs items="ONe.net,ONeMg.net,ONeNa.net,ONeMgNa.net,ONeMg2Na.net" >}}
-
-<!-- ONe.net -->
-{{< tab name='ONe.net' >}}
-
-Species to include: ${^{1}\rm{H}}$, ${^{4}\rm{He}}$, ${^{16}\rm{O}}$, ${^{20}\rm{Ne}}$, ${^{20}\rm{F}}$, ${^{20}\rm{O}}$, ${^{23}\rm{Na}}$, ${^{24}\rm{Mg}}$, ${^{25}\rm{Mg}}$, ${^{28}\rm{Si}}$
-
-Reactions to include:
-- ${^{16}\rm{O}} + {^{16}\rm{O}} \to \rm{products}$ (specifically, use the reaction ```r1616```)
-- ${^{20}\rm{Ne}} + {e^{-}} \to {^{20}\rm{F}} + \nu_{e}$
-- ${^{20}\rm{F}} \to {^{20}\rm{Ne}} + {e^{-}} + \bar{\nu}_{e}$
-- ${^{20}\rm{F}} + {e^{-}} \to {^{20}\rm{Ne}} + \nu_{e}$
-- ${^{20}\rm{O}} \to {^{20}\rm{F}} + {e^{-}} + \bar{\nu}_{e}$
-
-{{< details title="Partial solutions" closed="true" >}}
-Your net should have the following: 
-```fortran
-add_isos(
-    h1
-    he4
-    o16
-    ! for Ne20 - F20 - O20
-    ne20
-    f20
-    o20
-    ! for other accreted species
-    na23
-    mg24
-    mg25
-    ! for O ignition
-    si28
-)
-
-add_reactions(
-    ! for oxygen ignition
-    r1616
-    ! for Ne20 - F20 - O20
-    r_ne20_wk_f20
-    r_f20_wk-minus_ne20
-    r_f20_wk_o20
-    r_o20_wk-minus_f20
-)
-```
-
-{{< /details >}}
-
-{{< /tab >}}
-
-<!-- ONeMg.net -->
-{{< tab name="ONeMg.net" >}}
-Species to include: ${^{1}\rm{H}}$, ${^{4}\rm{He}}$, ${^{16}\rm{O}}$, ${^{20}\rm{Ne}}$, ${^{20}\rm{F}}$, ${^{20}\rm{O}}$, ${^{23}\rm{Na}}$, ${^{24}\rm{Mg}}$, ${^{24}\rm{Na}}$, ${^{24}\rm{Ne}}$, ${^{25}\rm{Mg}}$, ${^{28}\rm{Si}}$
-
-Reactions to include:
-- ${^{16}\rm{O}} + {^{16}\rm{O}} \to \rm{products}$ (specifically, use the reaction ```r1616```)
-- ${^{20}\rm{Ne}} + {e^{-}} \to {^{20}\rm{F}} + \nu_{e}$
-- ${^{20}\rm{F}} \to {^{20}\rm{Ne}} + {e^{-}} + \bar{\nu}_{e}$
-- ${^{20}\rm{F}} + {e^{-}} \to {^{20}\rm{Ne}} + \nu_{e}$
-- ${^{20}\rm{O}} \to {^{20}\rm{F}} + {e^{-}} + \bar{\nu}_{e}$
-- ${^{24}\rm{Mg}} + {e^{-}} \to {^{24}\rm{Na}} + \nu_{e}$
-- ${^{24}\rm{Na}} \to {^{24}\rm{Mg}} + {e^{-}} + \bar{\nu}_{e}$
-- ${^{24}\rm{Na}} + {e^{-}} \to {^{24}\rm{Ne}} + \nu_{e}$
-- ${^{24}\rm{Ne}} \to {^{24}\rm{Na}} + {e^{-}} + \bar{\nu}_{e}$
-
-{{< details title="Partial solutions" closed="true" >}}
-Your net should have the following: 
-```fortran
-add_isos(
-    h1
-    he4
-    o16
-    ! for Ne20 - F20 - O20
-    ne20
-    f20
-    o20
-    ! for Mg24 - Na24 - Ne24
-    mg24
-    na24
-    ne24
-    ! for other accreted species
-    na23
-    mg25
-    ! for O ignition
-    si28
-)
-
-add_reactions(
-    ! for oxygen ignition
-    r1616
-    ! for Ne20 - F20 - O20
-    r_ne20_wk_f20
-    r_f20_wk-minus_ne20
-    r_f20_wk_o20
-    r_o20_wk-minus_f20
-    ! for Mg24 - Na24 - Ne24
-    r_mg24_wk_na24
-    r_na24_wk-minus_mg24
-    r_na24_wk_ne24
-    r_ne24_wk-minus_na24
-)
-```
-
-{{< /details >}}
-{{< /tab >}}
-
-<!-- ONeNa.net -->
-{{< tab name="ONeNa.net" >}}
-
-Species to include: ${^{1}\rm{H}}$, ${^{4}\rm{He}}$, ${^{16}\rm{O}}$, ${^{20}\rm{Ne}}$, ${^{20}\rm{F}}$, ${^{20}\rm{O}}$, ${^{23}\rm{Na}}$, ${^{23}\rm{Ne}}$, ${^{24}\rm{Mg}}$, ${^{25}\rm{Mg}}$, ${^{28}\rm{Si}}$
-
-Reactions to include:
-- ${^{16}\rm{O}} + {^{16}\rm{O}} \to \rm{products}$ (specifically, use the reaction ```r1616```)
-- ${^{20}\rm{Ne}} + {e^{-}} \to {^{20}\rm{F}} + \nu_{e}$
-- ${^{20}\rm{F}} \to {^{20}\rm{Ne}} + {e^{-}} + \bar{\nu}_{e}$
-- ${^{20}\rm{F}} + {e^{-}} \to {^{20}\rm{Ne}} + \nu_{e}$
-- ${^{20}\rm{O}} \to {^{20}\rm{F}} + {e^{-}} + \bar{\nu}_{e}$
-- ${^{23}\rm{Na}} + {e^{-}} \to {^{23}\rm{Ne}} + \nu_{e}$
-- ${^{23}\rm{Ne}} \to {^{23}\rm{Ne}} + {e^{-}} + \bar{\nu}_{e}$
-
-{{< details title="Partial solutions" closed="true" >}}
-Your net should have the following: 
-```fortran
-add_isos(
-    h1
-    he4
-    o16
-    ! for Ne20 - F20 - O20
-    ne20
-    f20
-    o20
-    ! for Na23 - Ne23
-    na23
-    ne23
-    ! for other accreted species
-    mg24
-    mg25
-    ! for O ignition
-    si28
-)
-
-add_reactions(
-    ! for oxygen ignition
-    r1616
-    ! for Ne20 - F20 - O20
-    r_ne20_wk_f20
-    r_f20_wk-minus_ne20
-    r_f20_wk_o20
-    r_o20_wk-minus_f20
-    ! for Na23 - Ne23 pair
-    r_na23_wk_ne23
-    r_ne23_wk-minus_na23
-)
-```
-
-{{< /details >}}
-
-{{< /tab >}}
-
-<!-- ONeMgNa.net -->
-{{< tab name="ONeMgNa.net" >}}
-
-Species to include: ${^{1}\rm{H}}$, ${^{4}\rm{He}}$, ${^{16}\rm{O}}$, ${^{20}\rm{Ne}}$, ${^{20}\rm{F}}$, ${^{20}\rm{O}}$, ${^{23}\rm{Na}}$, ${^{23}\rm{Ne}}$, ${^{24}\rm{Mg}}$, ${^{24}\rm{Na}}$, ${^{24}\rm{Ne}}$, ${^{25}\rm{Mg}}$, ${^{28}\rm{Si}}$
-
-Reactions to include:
-- ${^{16}\rm{O}} + {^{16}\rm{O}} \to \rm{products}$ (specifically, use the reaction ```r1616```)
-- ${^{20}\rm{Ne}} + {e^{-}} \to {^{20}\rm{F}} + \nu_{e}$
-- ${^{20}\rm{F}} \to {^{20}\rm{Ne}} + {e^{-}} + \bar{\nu}_{e}$
-- ${^{20}\rm{F}} + {e^{-}} \to {^{20}\rm{Ne}} + \nu_{e}$
-- ${^{20}\rm{O}} \to {^{20}\rm{F}} + {e^{-}} + \bar{\nu}_{e}$
-- ${^{24}\rm{Mg}} + {e^{-}} \to {^{24}\rm{Na}} + \nu_{e}$
-- ${^{24}\rm{Na}} \to {^{24}\rm{Mg}} + {e^{-}} + \bar{\nu}_{e}$
-- ${^{24}\rm{Na}} + {e^{-}} \to {^{24}\rm{Ne}} + \nu_{e}$
-- ${^{24}\rm{Ne}} \to {^{24}\rm{Na}} + {e^{-}} + \bar{\nu}_{e}$
-- ${^{23}\rm{Na}} + {e^{-}} \to {^{23}\rm{Ne}} + \nu_{e}$
-- ${^{23}\rm{Ne}} \to {^{23}\rm{Ne}} + {e^{-}} + \bar{\nu}_{e}$
-
-{{< details title="Partial solutions" closed="true" >}}
-Your net should have the following: 
-```fortran
-add_isos(
-    h1
-    he4
-    o16
-    ! for Ne20 - F20 - O20
-    ne20
-    f20
-    o20
-    ! for Mg24 - Na24 - Ne24
-    mg24
-    na24
-    ne24
-    ! for Na23 - Ne23
-    na23
-    ne23
-    ! for other accreted species
-    mg25
-    ! for O ignition
-    si28
-)
-
-add_reactions(
-    ! for oxygen ignition
-    r1616
-    ! for Ne20 - F20 - O20
-    r_ne20_wk_f20
-    r_f20_wk-minus_ne20
-    r_f20_wk_o20
-    r_o20_wk-minus_f20
-    ! for Mg24 - Na24 - Ne24
-    r_mg24_wk_na24
-    r_na24_wk-minus_mg24
-    r_na24_wk_ne24
-    r_ne24_wk-minus_na24
-    ! for Na23 - Ne23 pair
-    r_na23_wk_ne23
-    r_ne23_wk-minus_na23
-)
-```
-
-{{< /details >}}
-
-{{< /tab >}}
-
-<!-- ONeMg2Na.net -->
-{{< tab name="ONeMg2Na.net" >}}
-
-Species to include: ${^{1}\rm{H}}$, ${^{4}\rm{He}}$, ${^{16}\rm{O}}$, ${^{20}\rm{Ne}}$, ${^{20}\rm{F}}$, ${^{20}\rm{O}}$, ${^{23}\rm{Na}}$, ${^{23}\rm{Ne}}$, ${^{24}\rm{Mg}}$, ${^{24}\rm{Na}}$, ${^{24}\rm{Ne}}$, ${^{25}\rm{Mg}}$, ${^{25}\rm{Na}}$, ${^{25}\rm{Ne}}$, ${^{28}\rm{Si}}$
-
-Reactions to include:
-- ${^{16}\rm{O}} + {^{16}\rm{O}} \to \rm{products}$ (specifically, use the reaction ```r1616```)
-- ${^{20}\rm{Ne}} + {e^{-}} \to {^{20}\rm{F}} + \nu_{e}$
-- ${^{20}\rm{F}} \to {^{20}\rm{Ne}} + {e^{-}} + \bar{\nu}_{e}$
-- ${^{20}\rm{F}} + {e^{-}} \to {^{20}\rm{Ne}} + \nu_{e}$
-- ${^{20}\rm{O}} \to {^{20}\rm{F}} + {e^{-}} + \bar{\nu}_{e}$
-- ${^{24}\rm{Mg}} + {e^{-}} \to {^{24}\rm{Na}} + \nu_{e}$
-- ${^{24}\rm{Na}} \to {^{24}\rm{Mg}} + {e^{-}} + \bar{\nu}_{e}$
-- ${^{24}\rm{Na}} + {e^{-}} \to {^{24}\rm{Ne}} + \nu_{e}$
-- ${^{24}\rm{Ne}} \to {^{24}\rm{Na}} + {e^{-}} + \bar{\nu}_{e}$
-- ${^{23}\rm{Na}} + {e^{-}} \to {^{23}\rm{Ne}} + \nu_{e}$
-- ${^{23}\rm{Ne}} \to {^{23}\rm{Ne}} + {e^{-}} + \bar{\nu}_{e}$
-- ${^{25}\rm{Mg}} + {e^{-}} \to {^{25}\rm{Na}} + \nu_{e}$
-- ${^{25}\rm{Na}} \to {^{25}\rm{Mg}} + {e^{-}} + \bar{\nu}_{e}$
-- ${^{25}\rm{Na}} + {e^{-}} \to {^{25}\rm{Ne}} + \nu_{e}$
-- ${^{25}\rm{Ne}} \to {^{25}\rm{Ne}} + {e^{-}} + \bar{\nu}_{e}$
-
-{{< details title="Partial solutions" closed="true" >}}
-Your net should have the following: 
-```fortran
-add_isos(
-    h1
-    he4
-    o16
-    ! for Ne20 - F20 - O20
-    ne20
-    f20
-    o20
-    ! for Mg24 - Na24 - Ne24
-    mg24
-    na24
-    ne24
-    ! for Na23 - Ne23
-    na23
-    ne23
-    ! for Mg25 - Na25 - Ne25
-    mg25
-    na25
-    ne25
-    ! for O ignition
-    si28
-)
-
-add_reactions(
-    ! for oxygen ignition
-    r1616
-    ! for Ne20 - F20 - O20
-    r_ne20_wk_f20
-    r_f20_wk-minus_ne20
-    r_f20_wk_o20
-    r_o20_wk-minus_f20
-    ! for Mg24 - Na24 - Ne24
-    r_mg24_wk_na24
-    r_na24_wk-minus_mg24
-    r_na24_wk_ne24
-    r_ne24_wk-minus_na24
-    ! for Na23 - Ne23 pair
-    r_na23_wk_ne23
-    r_ne23_wk-minus_na23
-    ! for Mg25 - Na25 - Ne25
-    r_mg25_wk_na25
-    r_na25_wk-minus_mg25
-    r_na25_wk_ne25
-    r_ne25_wk-minus_na25
-)
-```
-
-{{< /details >}}
-
-{{< /tab >}}
-
-
-{{< /tabs >}}
-
-
-
-
-<!-- general hint for adding isotopes -->
-{{< details title="General hint for adding isotopes" closed="true" >}}
-For adding an isotope without automatically connecting it to others, add the following in your net
-```fortran
-add_isos(
-    <isotope name>
-)
-```
-{{< /details >}}
-
-
-<!-- general hint for adding reactions -->
-{{< details title="General hint for reaction names" closed="true" >}}
-For adding reactions, add the following in your net
-```fortran
-add_reactions(
-    <reaction name>
-)
-```
-You can find the full list of reaction names [here](https://docs.mesastar.org/en/latest/net/nets.html#creating-a-custom-net), but you'll just need:
-- Electron capture reactions $X + e^{-} \to Y$ have the form ```r_x_wk_y```. 
-- Beta decay reactions $Y \to X + e^{-}$ have the form ```r_y_wk-minus_x```. 
-- Alpha capture reactions that release a photon $ C + \alpha \to D + \gamma $ have the form ```r_c_ag_d```. (Think: ```a``` for alpha, ```g``` for gamma). 
-{{< /details >}}
-
-### Step 4: Use your network
-
-| 📋 TASK 4 |
-|:--------|
-| Edit `inlist_accrete` to have it use your specific network. |
+| **Edit `inlist_rates`** to have it use your specific network, which we supply in **`nets_lab3`**. |
 
 > [!TIP]
 > You can do the following sanity check: 
@@ -406,11 +70,11 @@ You can find the full list of reaction names [here](https://docs.mesastar.org/en
 
 
 
-### Step 5: Set reaction rate source
+### Step 4: Set reaction rate source
 
 So far we have been using the Suzuki et al. rates, but with new experimental and theoretical data, some of these rates could change. In this crowdsourcing exercise, some of you will be implementing custom rates provided by us, or ask MESA to calculate weak reaction rates on the fly. 
 
-Check the Google spreadsheet [here](LINK) to remind yourself which rates you picked. 
+Check the Google spreadsheet [here](https://docs.google.com/spreadsheets/d/15PK9myW3oriuTeZvGFNGRKHqqphOHUFQoOcShtuME-g/edit?gid=0#gid=0) to remind yourself which rates you picked. 
 
 > [!NOTE]
 > Not everyone will get to implement custom rates / MESA on-the-fly weak rates, but there will be plenty of time at the end of this lab. Come back here for bonus points! 
@@ -422,7 +86,7 @@ Check the Google spreadsheet [here](LINK) to remind yourself which rates you pic
 <!-- Suzuki rates -->
 {{< tab name="Suzuki Rates" >}}
 
-#### Step 5: Using Suzuki Rates
+#### Step 4: Using Suzuki Rates
 
 | 📋 TASK 5 |
 |:--------|
@@ -455,11 +119,11 @@ You can supply your own tabulated weak rates to MESA. Here we will show you how 
 > [!NOTE]
 > You can also do this for *regular* reactions, but here we'll show you how to use custom *weak* reaction rates. 
 
-#### Step 5a: Tell MESA to use a custom rate table
+#### Step 4a: Tell MESA to use a custom rate table
 
 We first need to tell MESA the location of the directory (which we'll call `tables_custom`) to find the tabulated custom rates. This is an inlist option. 
 
-| 📋 TASK 5a |
+| 📋 TASK 4a |
 |:--------|
 | Edit `inlist_rates` to have it use your custom rate table. |
 
@@ -483,9 +147,9 @@ use_suzuki_weak_rates = .false.
 
 {{< /details >}}
 
-#### Step 5b: Download data
+#### Step 4b: Download data
 
-| 📋 TASK 5b |
+| 📋 TASK 4b |
 |:--------|
 | **Download** the weak rate tables [here]() to your working directory and **unzip** it. |
 
@@ -504,12 +168,12 @@ After that, your working directory should look like:
 
 Each ``h5`` file contains the rates for each weak reaction, for example, ``on-the-fly_r_f20_wk_o20.h5`` for the electron capture reaction ${^{20}\rm{F} + e^{-} \to {^{20}\rm{O}}}$. 
 
-#### Step 5c: Edit weak_rates.list
+#### Step 4c: Edit weak_rates.list
 
 Once we point MESA to `rates_dir`, it will look for `rate_list.txt` (for regular reactions, which we won't modify) and `weak_rate_list.txt` (for weak reactions), *if* they exist. 
 These two lists tell MESA the reaction names and the corresponding file names. 
 
-| 📋 TASK 5c |
+| 📋 TASK 4c |
 |:--------|
 | **Add** the following four reactions to  **`weak_rate_list.txt`**. Take a look at `weak_rate_list.txt` to see what is needed. |
 - ${^{20}\rm{Ne}} + e^{-} \to {^{20}\rm{F}} + \nu_{e}$
@@ -548,12 +212,12 @@ r_o20_wk-minus_f20 'on-the-fly_r_o20_wk-minus_f20.h5'
 
 MESA has the capability to calculate the weak reactions on-the-fly, if you supply the list of transitions and energy levels. 
 
-#### Step 5a: Telling MESA to use special (on-the-fly) weak rates
+#### Step 4a: Telling MESA to use special (on-the-fly) weak rates
 
 This is an inlist option. 
 
 <!-- Edit inlist -->
-| 📋 TASK 5a |
+| 📋 TASK 4a |
 |:--------|
 | Edit `inlist_rates` to have MESA use special weak rates. |
 
@@ -577,15 +241,15 @@ use_special_weak_rates = .true.
 {{< /details >}}
 
 
-#### Step 5b: Feeding MESA the states and transitions
+#### Step 4b: Feeding MESA the states and transitions
 
 For MESA to calculate the weak rates, it needs to know the nuclear states of the isotopes (energies and spins), and the halftimes of the transitions between these states. 
 
-| 📋 TASK 5b |
+| 📋 TASK 4b |
 |:--------|
 | **Download** the states file and the transition file [here]() to your working directory. |
 
-| 📋 TASK 5c |
+| 📋 TASK 4c |
 |:--------|
 | **Edit `inlist_rates`** to supply MESA with the states file and the transitions file. |
 
@@ -617,11 +281,11 @@ special_weak_transitions_file = 'special_weak_rates.transitions'
 
 Now you're ready to go!
 
-### Step 6: Declaring Bankrupcy
+### Step 5: Declaring Bankrupcy
 
-| 📋 TASK 6 |
+| 📋 TASK 5 |
 |:--------|
-| The only thing stopping your white dwarf from getting bankrupt is just you hitting ``./rn``. **Record the central density of your model in the Google spreadsheet** at the end of the run. |
+| The only thing stopping your white dwarf from getting bankrupt is just you hitting ``./rn``. **Record the central density of your model in the Google spreadsheet [here](https://docs.google.com/spreadsheets/d/15PK9myW3oriuTeZvGFNGRKHqqphOHUFQoOcShtuME-g/edit?gid=0#gid=0)** at the end of the run. |
 
 > [!WARNING]
 > If you haven't yet, do ``./clean && ./mk`` first.
@@ -638,7 +302,7 @@ We have done many things in this lab to ensure short runtimes. Here are a few su
 
 Do **not** attempt these all at once! Your run will be unbearably slow. 
 
-{{< tabs items="Bigger Reaction Networks,Time Resolution,Spatial Resolution,Skye EOS" >}}
+{{< tabs items="Bigger Net,Soft-wired Net,Time Resolution,Spatial Resolution,Skye EOS,Name Your Bison" >}}
 
 <!-- bigger nets -->
 {{< tab name="bigger net" >}}
@@ -653,7 +317,30 @@ In this lab, we asked you to use ``r1616`` for oxygen burning. What exactly does
 |:--------|
 | Look up ``r1616`` on ``$MESA_DIR/data/rates_data/reactions.list``.  |
 
+{{< details title="Hint: How to search?" closed="true" >}}
 
+```bash
+grep -r r1616 $MESA_DIR/data/rates_data/reactions.list
+```
+
+{{< /details >}}
+
+{{< details title="Partial solution" closed="true" >}}
+
+You should see something like
+```bash
+r1616                               2 o16                             =>  1 he4     + 1 si28
+```
+which is exactly ${^{16}\rm{O}} + {^{16}\rm{O}} \to {^{4}\rm{He}} + {^{28}\rm{Si}}$. 
+But if you open ``$MESA_DIR/data/rates_data/reactions.list`` and go to line 124, under ``info``, you'll see
+```bash
+o16+o16 => a + si28, a and p
+```
+The ``o16+o16`` reaction doesn't always give an alpha particle ($^{4}\rm{He}$) as a product. It sometimes returns a proton as a product (${^{16}\rm{O}} + {^{16}\rm{O}} \to {p} + {^{31}\rm{P}}$), but the `r1616` combines both the `a` and `p` channels in the energy released. To keep our nuclear net small, we left out $^{31}\rm{P}$, 
+
+
+
+{{< /details >}}
 
 
 #### Other important reactions
@@ -662,7 +349,7 @@ So far we've told you what isotopes and reactions are important to include, but 
 
 | 📋 TASK |
 |:--------|
-| Go to [this]() Google collab. Follow the instructions in asking ``pynucastro`` to tell you what isotopes and reactions are missing. |
+| **Go to [this]() Google collab**. **Use ``pynucastro``** to find out what isotopes and reactions are missing. **Edit your net** accordingly. |
 
 {{< /tab >}}
 
