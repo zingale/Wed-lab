@@ -396,16 +396,173 @@ o16+o16 => a + si28, a and p
 
 {{< /details >}}
 
-The ``o16+o16`` reaction doesn't always give an alpha particle ($^{4}\rm{He}$) as a product. It sometimes returns a proton as a product (${^{16}\rm{O}} + {^{16}\rm{O}} \to {p} + {^{31}\rm{P}}$). To keep our nuclear net small, we purposely left out $^{31}\rm{P}$. The `r1616` rate combines both the `a` and `p` channels, but uses ${^{28}\rm{Si}}$ as the end point. 
+The ${^{16}\rm{O}} + {^{16}\rm{O}}$ reaction doesn't always give an alpha particle ($^{4}\rm{He}$) and ${^{28}\rm{Si}}$ as products. It sometimes returns a proton as a product (${^{16}\rm{O}} + {^{16}\rm{O}} \to {p} + {^{31}\rm{P}}$). To keep our nuclear net small, we purposely left out $^{31}\rm{P}$. The `r1616` rate combines both the `a` and `p` channels, but uses ${^{28}\rm{Si}}$ as the end point. This is also what built-in nets like ``co_burn.net`` do. 
 
+An obvious improvement would be to include ${^{31}\rm{P}}$ in our net and add the reactions that connect it to ${^{16}\rm{O}} $. This will be covered in the next part. 
 
 #### Other important reactions
 
-So far we've told you what isotopes and reactions are important to include, but what other important reactions have we missed? Here we will use ``pynucastro`` to find out. 
+What other important reactions have we missed? Here we will use ``pynucastro`` to find out. 
 
 | 📋 TASK |
 |:--------|
 | **Go to [this]() Google collab**. **Use ``pynucastro``** to find out what isotopes and reactions are missing. **Edit your net** accordingly. |
+
+
+| 📋 TASK |
+|:--------|
+| Finally, ``./mk`` , ``./clean`` and ``./rn``. Observe if the reaction flow behaves differently. |
+
+{{< /tab >}}
+
+<!-- Soft-wired net -->
+{{< tab name="Soft-wired Net" >}}
+
+### Soft-wired Net
+
+In this lab, we showed you how to hard-wire a list of isotopes and reactions into the net. You can also supply a list of isotopes to MESA and ask it to connect them with every possible reaction. Here we will do that. 
+
+| 📋 TASK |
+|:--------|
+| Look up how built-in nets like ``mesa_49.net`` soft-wire the network. |
+
+{{< details title="Hint: where do the built-in nets live?" closed="true" >}}
+
+They live in ``$MESA_DIR/data/net_data/nets``. 
+
+{{< /details >}}
+
+
+{{< details title="Partial solutions" closed="true" >}}
+
+The soft-wiring is done by 
+```fortran
+add_isos_and_reactions(
+    <isotope name>
+    <chemical name> <lower limit of mass number> <upper limit of mass number>
+)
+```
+For example, 
+```fortran
+add_isos_and_reactions(
+    h1 
+    he 3 4
+)
+```
+will include $^{1}\rm{H}$, $^{3}\rm{He}$, $^{4}\rm{He}$. 
+
+{{< /details >}}
+
+
+| 📋 TASK |
+|:--------|
+| Take the same isotopes as ``ONeMg2Na.net`` and soft-wire the network. |
+
+{{< details title="Partial solutions" closed="true" >}}
+
+```fortran
+add_isos_and_reactions(
+    h1
+    he4
+    o16
+    o20
+    f20
+    ne20
+    ne 23 25
+    na 23 25
+    mg 23 25
+    si28
+)
+```
+
+{{< /details >}}
+
+| 📋 TASK |
+|:--------|
+| **Edit your inlist** to have MESA print out the list of isotopes and reactions. |
+
+{{< details title="Hint: where to find this option?" closed="true" >}}
+
+Look up ``show_net`` on ``$MESA_DIR/star/defaults/``:
+```bash
+grep -r show_net $MESA_DIR/star/defaults/
+```
+
+{{< /details >}}
+
+
+{{< details title="Partial solutions" closed="true" >}}
+
+In ``star_job`` in ``inlist_net``, set ``show_net_species_info = .true.`` and ``show_net_reactions_info = .true.``. 
+
+{{< /details >}}
+
+Now you're ready to run. 
+
+| 📋 TASK |
+|:--------|
+| Finally, ``./mk`` , ``./clean`` and ``./rn``. Look at the terminal to find the list of species and reactions in your new net. Observe if the reaction flow behaves differently. |
+
+{{< /tab >}}
+
+<!-- time resolution -->
+{{< tab name="Time Resolution" >}}
+
+
+
+{{< /tab >}}
+
+<!-- spatial resolution -->
+{{< tab name="Spatial Resolution" >}}
+
+### Spatial Resolution
+
+#### Resolution around Urca shells
+
+One thing we did do well is putting more spatial resolution around the Urca shells: 
+| 📋 TASK |
+|:--------|
+| Take a look at ``inlist_common``. Check out which inlist options are related to resolution around the Urca shells. |
+
+{{< details title="Partial solutions" closed="true" >}}
+
+Here we opted to put more resolution where the Urca species are changing abundances. 
+
+The options like
+```fortran
+xa_function_species(1) = 'na25'
+xa_function_weight(1) = 15
+xa_function_param(1) = 1d-4
+```
+track the mass fraction of particular species and put more resolution where more change is happening. In this example, we put more resolution where $^{25}\rm{Na}$ changes mass fraction and reaches $10^{-4}$. 
+
+{{< /details >}}
+
+> [!TIP]
+> You would think that higher spatial resolution would slow your run down. While mostly true, this also **helps with convergence**. When encountering convergence problems, one generally useful technique is to ensure that you have enough spatial resolution. 
+
+| 📋 TASK |
+|:--------|
+| **Comment out** the `xa_function*` options in ``inlist_common``, and **run MESA again**. Observe if the number of retries are higher. Note also the shape of the $T-\rho$ profile around the Urca shells. |
+
+> [!WARNING]
+> Be sure to do `./clean` and `./mk` first. 
+
+Hope this exercise helps you appreciate the utility of higher spatial resolution.
+
+#### ``mesh_delta_coeff``
+
+Of course, we lowered the overall spatial resolution by setting a large ``mesh_delta_coeff = 2.5``. 
+
+> [!TIP]
+> For converged runs, try ``mesh_delta_coeff`` less than or equal to 1. 
+
+| 📋 TASK |
+|:--------|
+| **Set ``mesh_delta_coeff = 1.0``** in ``inlist_common``, and **run MESA again**. Check if the evolution is any different. |
+
+> [!WARNING]
+> **Uncomment** the `xa_function*` options in ``inlist_common`` first. We want the resolution around Urca shells!
 
 {{< /tab >}}
 
