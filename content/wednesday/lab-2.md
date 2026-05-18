@@ -15,8 +15,8 @@ In sufficiently degenerate matter, certain nuclei can undergo cyclic electron ca
 Each cycle emits two neutrinos that carry energy directly out of the star, providing a potentially significant cooling (or heating) mechanism that depends sensitively on the accretion rate.
 
 In this lab you will:
-1. Add the **A=23 Urca pair** (Na²³ ↔ Ne²³) to your nuclear network and observe the Urca shell in real time with pgstar.
-2. Add the **A=25 Urca pair** (Mg²⁵ → Na²⁵ → Ne²⁵) and compare its effect against the A=23 run using pgstar plots and terminal history output.
+1. Add the **A=23 Urca pair** (${^{23}\rm{Na}}$ ↔ ${^{23}\rm{Ne}}$) to your nuclear network and observe the Urca shell in real time with pgstar.
+2. Add the **A=25 Urca pair** (${^{25}\rm{Mg}}$ → ${^{25}\rm{Na}}$ → ${^{25}\rm{Ne}}$) and compare its effect against the A=23 run using pgstar plots and terminal history output.
 3. Estimate the **compressional heating and Urca cooling timescales** of the white dwarf.
 
 ### Helpful Links
@@ -39,7 +39,7 @@ Consult the [MESA documentation](https://docs.mesastar.org/en/latest/) throughou
 
 ---
 
-## Part 1: Adding the A=23 Urca Pair (Na²³/Ne²³)
+## Part 1: Adding the A=23 Urca Pair (²³Na/²³Ne)
 
 ### Step 0: Start Up
 
@@ -78,12 +78,12 @@ After downloading, your working directory should look like:
 
 ### Step 1: Build the ONeNa Network
 
-The starting network (`ONe.net`) contains the Ne²⁰→F²⁰→O²⁰ electron capture chain and O¹⁶ burning, but no Na²³ or Ne²³.
+The starting network (`ONe.net`) contains the ²⁰Ne→²⁰F→²⁰O electron capture chain and ¹⁶O burning, but no ²³Na or ²³Ne.
 To model the A=23 Urca pair we need to add both isotopes and their connecting weak reactions.
 
 | 📋 TASK 2 |
 |:--------|
-| **Create a new file `ONeNa.net`** in your working directory. Starting from `ONe.net`, **add Na²³, Ne²³** and the two Urca reactions that connect them. |
+| **Create a new file `ONeNa.net`** in your working directory. Starting from `ONe.net`, **add $^{23}\mathrm{Na}$, $^{23}\mathrm{Ne}$** and the two Urca reactions that connect them. |
 
 > [!NOTE]
 > The A=23 Urca pair consists of:
@@ -135,11 +135,11 @@ add_reactions(
 
 ### Step 2: Update the Inlists
 
-With the network in hand, update the inlists to use it and include Na²³ in the accreted material.
+With the network in hand, update the inlists to use it and include $^{23}\mathrm{Na}$ in the accreted material.
 
 | 📋 TASK 3 |
 |:--------|
-| In `inlist_accrete`, **change the network** to `ONeNa.net` and **add Na²³** to the accreted composition. Use a mass fraction of 5% Na²³ (reducing Ne²⁰ from 50% to 45%). |
+| In `inlist_accrete`, **change the network** to `ONeNa.net` and **add Na²³** to the accreted composition. Use a mass fraction of 5% $^{23}\mathrm{Na}$ (reducing $^{20}\mathrm{Ne}$ from 50% to 45%). |
 
 {{< details title="Hint: What variables need to be changed?" closed="true" >}}
 In `&star_job`:
@@ -148,7 +148,7 @@ In `&star_job`:
 In `&controls`, update the accretion block:
 - `num_accretion_species = 3`
 - Add `accretion_species_id(3) = 'na23'` and `accretion_species_xa(3) = 0.05d0`
-- Adjust Ne²⁰ fraction so that all fractions sum to 1.
+- Adjust $^{20}\mathrm{Ne}$ fraction so that all fractions sum to 1.
 {{< /details >}}
 
 {{< details title="Partial Solution" closed="true" >}}
@@ -167,15 +167,15 @@ In `&controls`, update the accretion block:
 ```
 {{< /details >}}
 
-> [!WARNING]
-> Remember to do `./clean && ./mk` after any change to a network file or `run_star_extras.f90`.
+<!-- > [!WARNING]
+> Remember to do `./clean && ./mk` after any change to a network file or `run_star_extras.f90`. -->
 
 
 ### Step 3: Run and Observe the A=23 Urca Shell
 
 | 📋 TASK 4 |
 |:--------|
-| Compile and run with `./mk` then `./rn`. In the pgstar window labelled **"A=23 Urca Shell"**, observe the composition profile and the neutrino emissivity as the core density increases. |
+| Compile and run with `./clean`, `./mk` then `./rn`. In the pgstar window labelled **"A=23 Urca Shell"**, observe the composition profile and the neutrino emissivity as the core density increases. |
 
 You should see two windows open: the main grid overview (`Grid2`) and the Urca shell profile plot (`Profile_Panels1`).
 
@@ -196,13 +196,13 @@ Check `log_cntr_Rho` in the text summary to track progress.
 {{< /details >}}
 
 > [!NOTE]
-> If you want to see the final pgstar frame before MESA closes, you can add `pause_before_terminate = 'press enter to continue'` to the `&controls` section of `inlist_common`.
+> If you want to see the final pgstar frame before MESA closes, you can add `pause_before_terminate = .true.` to the `&star_job` section of `inlist_common`.
 
 ---
 
-## Part 2: Adding the A=25 Urca Pair (Mg²⁵/Na²⁵/Ne²⁵)
+## Part 2: Adding the A=25 Urca Pair (²⁵Mg/²⁵Na/²⁵Ne)
 
-The A=25 Urca pair operates at a higher threshold density than A=23.
+The A=25 Urca pairs operate at different threshold densities than A=23.
 It consists of a two-step electron capture chain:
 $$^{25}_{12}\mathrm{Mg} + e^- \to {^{25}_{11}\mathrm{Na}} + \nu_e \quad \text{then} \quad {^{25}_{11}\mathrm{Na}} + e^- \to {^{25}_{10}\mathrm{Ne}} + \nu_e$$
 and the reverse beta decays.
@@ -212,7 +212,7 @@ and the reverse beta decays.
 
 | 📋 TASK 5 |
 |:--------|
-| **Create a new file `ONeNaMg25.net`** by extending `ONeNa.net` to include the A=25 species and reactions. Also add Mg²⁴ as a tracked species (it is accreted). |
+| **Create a new file `ONeNaMg25.net`** by extending `ONeNa.net` to include the A=25 species and reactions. Also add $^{24}\mathrm{Mg}$ as a tracked species (it is accreted). |
 
 {{< details title="Hint: What isotopes and reactions to add?" closed="true" >}}
 Additional isotopes:
@@ -272,7 +272,7 @@ add_reactions(
 
 | 📋 TASK 6 |
 |:--------|
-| Update `inlist_accrete` to use `ONeNaMg25.net`, load the `1.1Msun_ONeMg2Na.mod` starting model, set the LOGS directory to `LOGS_ONeNaMg25_1d-6`, and update the accretion composition to include Mg²⁴ (5%) and Mg²⁵ (1%). |
+| Update `inlist_accrete` to use `ONeNaMg25.net`, load the `1.1Msun_ONeMg2Na.mod` starting model, set the LOGS directory to `LOGS_ONeNaMg25_1d-6`, and update the accretion composition to include ²⁴Mg (5%) and ²⁵Mg (1%). |
 
 {{< details title="Partial Solution" closed="true" >}}
 ```fortran
@@ -363,12 +363,13 @@ Also delete or comment out the old `profile_panels1_yaxis_name(2)` block that po
 | Run the A=25 case (`./rn`) and observe the **`Profile_Panels1`** window — it now shows three panels: A=23 rates (panel 1), A=25 rates (panel 2), and the combined neutrino emissivity (panel 3). |
 
 Look for:
-- A second Urca shell appearing at a **higher density** than the A=23 shell.
-- Any change in the neutrino emissivity profile — does the A=25 shell contribute noticeably?
+- A second Urca shell appearing at a **lower density** than the A=23 shell, and a third shell appearing at a higher density than the A=23 shell. 
+- Any change in the neutrino emissivity profile — do the A=25 shells contribute noticeably?
 
 > [!NOTE]
-> Theoretical threshold density for the A=25 shell:
-> $$\log_{10} \rho_{\rm thresh} \approx 9.3 \quad (^{25}\mathrm{Mg}/^{25}\mathrm{Na})$$
+> Theoretical threshold density for the A=25 shells:
+> $$\log_{10} \rho_{\rm thresh} \approx 9.1 \quad (^{25}\mathrm{Mg}/^{25}\mathrm{Na})$$
+> $$\log_{10} \rho_{\rm thresh} \approx 9.8 \quad (^{25}\mathrm{Na}/^{25}\mathrm{Ne})$$
 
 
 ### Step 7: Compare the Two Runs
@@ -510,9 +511,9 @@ Add a `History_Panels1` block to `inlist_pgstar` that shows the three timescales
 | At late times ($\log\rho_c \gtrsim 9$), which timescale is shortest: $\tau_\rho$, $\tau_\times$, or $\tau_\nu$? What does the ordering imply for whether the Urca shells can efficiently regulate the core temperature? |
 
 {{< details title="Discussion hint" closed="true" >}}
-- If $\tau_\nu \ll \tau_\rho$: the Urca shells cool the WD faster than compression heats it — the core stays cold, favouring core collapse (**cECSNe**).
-- If $\tau_\rho \ll \tau_\nu$: compressional heating wins and the WD warms up, favouring thermonuclear runaway (**ECSNe**).
-- If $\tau_\times \ll \tau_\rho$: the core sweeps through the Urca shell quickly, so even a narrow shell can radiate efficiently.
+- If $\tau_\nu \ll \tau_\times$: the Urca shells cool the WD faster than compression heats it — the core temperature plummets.
+- If $\tau_\times \ll \tau_\nu$: compressional heating wins and the WD warms up. 
+<!-- - If $\tau_\times \ll \tau_\rho$: the core sweeps through the Urca shell quickly, so even a narrow shell can radiate efficiently. -->
 
 This balance is sensitive to $\dot{M}$ and the Urca pair threshold densities — exactly the crowdsourcing question you will explore in Lab 3!
 {{< /details >}}
