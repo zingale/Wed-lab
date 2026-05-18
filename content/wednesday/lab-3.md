@@ -105,11 +105,9 @@ Check the Google spreadsheet [here](https://docs.google.com/spreadsheets/d/15PK9
 <!-- Suzuki rates -->
 {{< tab name="Suzuki Rates" >}}
 
-#### Suzuki Rates
-
 #### Step 4: Using Suzuki Rates
 
-| 📋 TASK 4 |
+| 📋 TASK 5 |
 |:--------|
 | **Edit your ``inlist_rates``** to ask MESA to use Suzuki weak rates. |
 
@@ -134,8 +132,6 @@ use_suzuki_weak_rates = .true.
 
 <!-- Custom weak rates -->
 {{< tab name="Custom Weak Rates" default="true" >}}
-
-#### Custom Weak Rates
 
 You can supply your own tabulated weak rates to MESA. Here we will show you how to use this feature. 
 
@@ -174,7 +170,7 @@ use_suzuki_weak_rates = .false.
 
 | 📋 TASK 4b |
 |:--------|
-| **Download** the weak rate tables [here](https://drive.google.com/file/d/1R9DOoAh8IkojyJa752aPxKLLUNlwf8nu/view?usp=drive_link) to your working directory and **unzip** it. |
+| **Download** the weak rate tables [here](https://drive.google.com/file/d/1qtQLwOf2qovA8pI5miiD6kxgNBJVe28x/view?usp=drive_link) to your working directory and **unzip** it. |
 
 After that, your working directory should look like:
 
@@ -232,8 +228,6 @@ r_o20_wk-minus_f20 'on-the-fly_r_o20_wk-minus_f20.h5'
 
 <!-- Special rates -->
 {{< tab name="Special (on-the-fly) rates" >}}
-
-#### Special (on-the-fly) Rates
 
 MESA has the capability to calculate the weak reactions on-the-fly, if you supply the list of transitions and energy levels. 
 
@@ -365,12 +359,7 @@ We have done many things in this lab to ensure short runtimes. Here are a few su
 Do **not** attempt these all at once! Your run will be unbearably slow. 
 
 
-{{< tabs items=",Bigger Net,Soft-wired Net,Time Resolution,Spatial Resolution,Skye EOS,Name Your Bison" >}}
-
-<!-- empty -->
-{{< tab name="empty" >}}
-Click on these tabs. They are in no particular order. 
-{{< /tab >}}
+{{< tabs items="Bigger Net,Soft-wired Net,Time Resolution,Spatial Resolution,Skye EOS,Name Your Bison" >}}
 
 <!-- bigger nets -->
 {{< tab name="bigger net" >}}
@@ -519,17 +508,15 @@ Now you're ready to run.
 <!-- time resolution -->
 {{< tab name="Time Resolution" >}}
 
-### Time Resolution
-
-<!-- In this lab, we relaxed the time resolution when it comes to the white dwarf's surface luminosity and temperature:
+In this lab, we relaxed the time resolution when it comes to the white dwarf's surface luminosity and temperature:
 ```fortran
 delta_lgL_limit = 0.2d0
 delta_lgTeff_limit = 0.05d0
 ```
 
-These two items mainly affect the time stepping that matters more for the accretion (because compressional heating changes the surface luminosity). But otherwise, we didn't do anything to relax the time resolution.  -->
+These two items mainly affect the time stepping that matters more for the accretion (because compressional heating changes the surface luminosity). But otherwise, we didn't do anything to relax the time resolution. 
 
-<!-- #### Limiting changes in $T_{c}$ and $\rho_{c}$
+#### Limiting changes in $T_{c}$ and $\rho_{c}$
 
 Now, when the core undergoes weak reactions and oxygen ignition, we've seen that it undergoes rapid changes in $T_{c}$ and $\rho_{c}$. 
 
@@ -539,13 +526,13 @@ We will work through some useful controls to limit these changes.
 |:--------|
 | Check out which inlist options are related to timestepping limited by changes in $T_{c}$ and $\rho_{c}$. **Add these controls** into your inlist. | -->
 
-<!-- {{< details title="Hint: which inlist section?" closed="true" >}}
+{{< details title="Hint: which inlist section?" closed="true" >}}
 
 Time stepping controls are in the ``&controls`` section. Check out ``$MESA_DIR/star/defaults/controls.defaults``. 
 
-{{< /details >}} -->
+{{< /details >}}
 
-<!-- {{< details title="Partial solutions" closed="true" >}}
+{{< details title="Partial solutions" closed="true" >}}
 
 These are actually commented out in ``inlist_commons``. 
 
@@ -555,16 +542,17 @@ delta_lgT_cntr_limit = 2d-2  ! default is 0.01d0
 delta_lgRho_cntr_limit = 5d-3  ! default is 0.05d0
 ```
 
-{{< /details >}} -->
+{{< /details >}}
 
-<!-- | 📋 TASK |
+| 📋 TASK |
 |:--------|
 | **Add these controls** into your inlist and run MESA again. What values to use? A good starting point is in the ``partial solutions`` above. |
 
 > [!WARNING]
-> Make sure you do ``./clean`` and ``./mk`` first.  -->
+> Make sure you do ``./clean`` and ``./mk`` first. 
 
-<!-- #### Limiting changes in nuclear burning luminosity
+
+#### Limiting changes in nuclear burning luminosity
 
 When oxygen burning starts, the temperature profile changes very rapidly. A good way to limit these changes would be to use 
 ```fortran
@@ -573,9 +561,9 @@ delta_lgT_max_limit_lgT_min = 8.8d0
 ```
 This combination will limit the change in $\log_{10}T_{\rm max}$ by less than $0.01$ once $\log_{10}T_{\rm max} > 8.8$, and has no effect for lower temperatures. 
 
-Alternatively, you can try to limit changes in the nuclear burning luminosity $L_{\rm nuc}$. Normally, you can use ``delta_lgL_nuc_limit`` to limit changes in $\log_{10}(L_{\rm nuc}/L_{\odot})$. The problem is, here the weak reactions produce a lot of cooling and cancel out the overall nuclear burning luminosity globally (but not locally). So, here we will show you how to do this with ``run_star_extras``, particularly with ``other_timestep_limit``.  -->
+Alternatively, you can try to limit changes in the nuclear burning luminosity $L_{\rm nuc}$. Normally, you can use ``delta_lgL_nuc_limit`` to limit changes in $\log_{10}(L_{\rm nuc}/L_{\odot})$. The problem is, here the weak reactions produce a lot of cooling and cancel out the overall nuclear burning luminosity globally (but not locally). So, here we will show you how to do this with ``run_star_extras``, particularly with ``other_timestep_limit``. 
 
-<!-- | 📋 TASK |
+| 📋 TASK |
 |:--------|
 | Add ``use_other_timestep_limit = .true. `` in ``inlist_common``. |
 
@@ -583,9 +571,9 @@ Next, we will edit ``run_star_extras``.
 
 | 📋 TASK |
 |:--------|
-| Copy the subroutine in ``$MESA_DIR/star/other/other_timestep_limit.f90`` to your ``run_star_extras``. Rename it ``L1616_timestep_limit``. | -->
+| Copy the subroutine in ``$MESA_DIR/star/other/other_timestep_limit.f90`` to your ``run_star_extras``. Rename it ``L1616_timestep_limit``. |
 
-<!-- {{< details title="Partial solutions" closed="true" >}}
+{{< details title="Partial solutions" closed="true" >}}
 
 Your subroutine should look like this
 ```fortran
@@ -604,22 +592,22 @@ end function L1616_timestep_limit
 > [!WARNING]
 > Because this is a Fortran ``function``, make sure you also change ``other_timestep_limit = keep_going`` to ``L1616_timestep_limit = keep_going`` in the second last line of this subroutine!
 
-{{< /details >}} -->
+{{< /details >}}
 
-<!-- > [!TIP]
+> [!TIP]
 > To check if you did this right, do ``./clean`` and ``./mk``. 
 
 | 📋 TASK |
 |:--------|
-| Next, make sure that your star pointer points to this subroutine in ``run_star_extras``. | -->
+| Next, make sure that your star pointer points to this subroutine in ``run_star_extras``. |
 
-<!-- {{< details title="Hint: where to point?" closed="true" >}}
+{{< details title="Hint: where to point?" closed="true" >}}
 
 This should be done in ``extra_controls``. 
 
-{{< /details >}} -->
+{{< /details >}}
 
-<!-- {{< details title="Partial solutions" closed="true" >}}
+{{< details title="Partial solutions" closed="true" >}}
 
 In your ``extra_controls``, add ``s% other_timestep_limit => L1616_timestep_limit``. Your ``extra_controls`` should look like
 ```fortran
@@ -659,15 +647,15 @@ In your ``extra_controls``, add ``s% other_timestep_limit => L1616_timestep_limi
 
       end subroutine extras_controls
 ```
-{{< /details >}} -->
+{{< /details >}}
 
-<!-- Now, we are ready to edit ``L1616_timestep_limit``. Our goal is to have MESA check the nuclear burning luminosity of the ${^{16}\rm{O}}+{^{16}\rm{O}}$ reaction, $L_{1616}$, and implement timestep limits based on how much $\log_{10} L_{1616}$ changes. 
+Now, we are ready to edit ``L1616_timestep_limit``. Our goal is to have MESA check the nuclear burning luminosity of the ${^{16}\rm{O}}+{^{16}\rm{O}}$ reaction, $L_{1616}$, and implement timestep limits based on how much $\log_{10} L_{1616}$ changes. 
 
 | 📋 TASK |
 |:--------|
-| Find the ``star_data`` variable that is related to nuclear burning luminosity of specific reaction categories. | -->
+| Find the ``star_data`` variable that is related to nuclear burning luminosity of specific reaction categories. |
 
-<!-- {{< details title="Partial solutions" closed="true" >}}
+{{< details title="Partial solutions" closed="true" >}}
 
 This is given by 
 ```fortran
@@ -677,31 +665,31 @@ real(dp), pointer :: luminosity_by_category(:,:) ! (num_categories, nz)
 
 As you can see, the first index is for different categories of reactions, and the second index is for different zones in the stellar model. 
 
-{{< /details >}} -->
+{{< /details >}}
 
-<!-- | 📋 TASK |
+| 📋 TASK |
 |:--------|
-| Now that we have found the ``star_data`` variable for $L_{1616}$, edit ``L1616_timestep_limit`` to have it calculate the **global** change in $\log_{10} L_{1616}$. | -->
+| Now that we have found the ``star_data`` variable for $L_{1616}$, edit ``L1616_timestep_limit`` to have it calculate the **global** change in $\log_{10} L_{1616}$. |
 
-<!-- {{< details title="Hint: what is the index for ${^{16}\rm{O}}+{^{16}\rm{O}}$ in the burning categories?" closed="true" >}}
+{{< details title="Hint: what is the index for ${^{16}\rm{O}}+{^{16}\rm{O}}$ in the burning categories?" closed="true" >}}
 
 This is given by ``ioo``. 
 
-{{< \details >}} -->
+{{< /details >}}
 
-<!-- {{< details title="Hint: which zone do we want?" closed="true" >}}
+{{< details title="Hint: which zone do we want?" closed="true" >}}
 
 Since we want the global change, we want the luminosity at the surface. The surface zone is zone `1`. 
 
-{{< /details >}} -->
+{{< /details >}}
 
-<!-- {{< details title="Hint: is there a similar ``star_data`` varaible for $L_{1616}$ at the start of timestep?" closed="true" >}}
+{{< details title="Hint: is there a similar ``star_data`` varaible for $L_{1616}$ at the start of timestep?" closed="true" >}}
 
 Yes, this is called ``luminosity_by_category``. 
 
-{{< /details >}} -->
+{{< /details >}}
 
-<!-- {{< details title="Partial solutions" closed="true" >}}
+{{< details title="Partial solutions" closed="true" >}}
 
 First, you need to call ``star_ptr``, so that the ``L1616_timestep_limit`` function knows about the ``s`` pointer. This requires declaring
 ```fortran
@@ -717,7 +705,7 @@ if (ierr /= 0) return
 
 Next, you need to make sure that the function knows about the definiton of ``ioo``. This means declaring
 ```fortran
-use rates_def
+use chem_def
 ```
 at the top of the function.
 
@@ -727,7 +715,7 @@ Your function should look like
 
 As you can see, the first index is for different categories of reactions, and the second index is for different zones in the stellar model. 
 
-{{< /details >}} -->
+{{< /details >}}
 
 
 
@@ -760,7 +748,7 @@ track the mass fraction of particular species and put more resolution where more
 {{< /details >}}
 
 > [!TIP]
-> You would think that higher spatial resolution would slow your run down. While kinda true, this also **helps with convergence** and reduces retries. 
+> You would think that higher spatial resolution would slow your run down. While mostly true, this also **helps with convergence**. When encountering convergence problems, one generally useful technique is to ensure that you have enough spatial resolution. 
 
 | 📋 TASK |
 |:--------|
@@ -784,38 +772,6 @@ Of course, we lowered the overall spatial resolution by setting a large ``mesh_d
 
 > [!WARNING]
 > **Uncomment** the `xa_function*` options in ``inlist_common`` first. We want the resolution around Urca shells!
-
-{{< /tab >}}
-
-<!-- Skye EOS -->
-{{< tab name="Skye EOS" >}}
-
-#### Skye EOS
-
-In this lab, we have turned off the Skye EOS, in favor of the HELM EOS. They both cover the degenerate region, but Skye EOS has better treatment of Coulomb effects in these dense regions. Sadly, better physics (thermodynamics) sometimes means more convergence issues. So to speed things up, we turned off Skye EOS. 
-
-> [!IMPORTANT]
-> For low accretion rates (like $10^{-8}M_{\odot}\rm{yr}^{-1}$), Urca cooling will cool the core sufficiently that it reaches crystallization. The thermodynamics of crystallization, and Coulomb effects under degenerate coniditions, are more properly treated with the Skye EOS, so it is important to consider using Skye EOS. 
-
-| 📋 TASK |
-|:--------|
-| **Set ``use_Skye = .true.``** in ``inlist_common``, and **run MESA again**. Check if the evolution is any different. |
-
-> [!WARNING]
-> Make sure you do ``./clean`` and ``./mk`` first. 
-
-> [!IMPORTANT]
-> We recommend $\dot{M} > 10^{-7} M_{\odot} \rm{yr}^{-1}$ (``mass_change = 1d-7`` or greater). Lower values will result in hours-long runs because the Coulomb effects are stronger and there are more convergence issues. 
-
-> [!NOTE]
-> We also set ``mass_fraction_limit_for_Skye = 1d-10``. By default, this is ``1d-4``. We lowered this number so that the EOS considers even trace elements on the thermodynamics. We do not recommend even lower values. 
-
-{{< /tab >}}
-
-<!-- Name your bison -->
-{{< tab name="Name your bison" >}}
-
-Go to the Google spreadsheet [here]() and add names of your bison. Our lecturer Mike will reward valuable MESA summer school points for his favorite name(s). 
 
 {{< /tab >}}
 
