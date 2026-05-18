@@ -9,11 +9,13 @@ disableKinds: "rss"
 
 ## Introduction
 
-Urca processes describe sets of reactions whereby isobars cyclically experience electron capture and $\beta$ decay, both releasing neutrinos.[^GamowSchoenberg41] Due to the varying dependencies of these reaction rates on temperature and density, the locations whereby these reactions dominate can be described by distinct shells. Within these shells, $\beta$ decay produces local heating, while electron capture can either heat or cool the surrounding medium (dependent on density).[^MartinezPinedo14] The net effect can lead to more efficient cooling that decreases thermal support to the point of collapse ("bankrupting" the star, hence the eponymous Casino de Urca in Rio de Jainero![^Haensel95]). 
+Urca processes describe sets of reactions whereby isobars cyclically experience electron capture and $\beta$ decay (i.e. electron emission), both releasing neutrinos which stream freely away. [^GamowSchoenberg41] The net effect can lead to more efficient cooling that decreases thermal support to the point of collapse ("bankrupting" the star, hence the eponymous Casino de Urca in Rio de Jainero![^Haensel95]). 
+Due to the varying dependencies of these reaction rates on temperature and density, the locations whereby the urca process dominate can be described by distinct shells. 
+<!-- Within these shells, $\beta$ decay produces local heating, while electron capture can either heat or cool the surrounding medium (dependent on density).[^MartinezPinedo14] -->
 
 In the temperatures and densities characteristic of an accreting oxygen-neon (ONe) white dwarf, it is expected that these urca processes are critical to accurately modeling the expected end state of the star (implosion versus explosion).[^Hola26] To account for these processes, it is essential to carefully consider the nuclear network used throughout our models. 
 
-In this lab, we will model the accretion stage of an ONe white dwarf, beginning from a precomputed starting point and evolving to oxygen ignition. To accomplish this, we will build a custom nuclear network and measure the rate balance between electron capture/$\beta^-$ rates. In the end, we will map the density at oxygen ignition to answer the question: Will this star explode or implode?
+In this lab, we will model the accretion stage of an ONe white dwarf, beginning from a precomputed starting point and evolving to oxygen ignition. To accomplish this, we will build a custom nuclear network and measure the rate balance between electron capture/$\beta^-$ decay rates. In the end, we will map the density at oxygen ignition to answer the question: Will this star explode or implode?
 
 For more discussion on accretion-induced collapse in accreting white dwarfs, see also Schwab&Rocha19[^Schwab19], Schwab+15[^Schwab15], and Piersanti+22[^Piersanti22].
 
