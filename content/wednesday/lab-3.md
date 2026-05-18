@@ -68,7 +68,7 @@ In `&controls` of your `inlist_accrete`, set `mass_change = <your value>`.
 
 ### Step 3: Set your network
 
-You've done great work in labs 1 and 2 to implement custom network, so here we will just supply the networks need. 
+You've done great work in labs 1 and 2 to implement custom networks, so here we will just supply the networks need. 
 
 | 📋 TASK 3 |
 |:--------|
@@ -89,6 +89,291 @@ new_net_name = 'nets_lab3/<name>.net'
 ```
 {{< /details >}}
 
+#### What are in these nets?
+
+> [!NOTE]
+> In ``ONeMg.net``, ``ONeMgNa.net`` and ``ONeMg2Na.net``, we added the $^{24}\rm{Mg}$ electron capture reactions, which are exothermic. 
+
+{{< tabs items="ONe.net,ONeMg.net,ONeNa.net,ONeMgNa.net,ONeMg2Na.net" >}}
+
+<!-- ONe.net -->
+{{< tab name='ONe.net' >}}
+
+Species: ${^{1}\rm{H}}$, ${^{4}\rm{He}}$, ${^{16}\rm{O}}$, ${^{20}\rm{Ne}}$, ${^{20}\rm{F}}$, ${^{20}\rm{O}}$, ${^{23}\rm{Na}}$, ${^{24}\rm{Mg}}$, ${^{25}\rm{Mg}}$, ${^{28}\rm{Si}}$
+
+Reactions: 
+- **[Oxygen burning]** ${^{16}\rm{O}} + {^{16}\rm{O}} \to \rm{products}$ (specifically, the simplified reaction ```r1616```)
+- **[Ne20 EC chain]** ${^{20}\rm{Ne}} + {e^{-}} \to {^{20}\rm{F}} + \nu_{e}$, ${^{20}\rm{F}} \to {^{20}\rm{Ne}} + {e^{-}} + \bar{\nu}_{e}$
+- **[Ne20 EC chain]** ${^{20}\rm{F}} + {e^{-}} \to {^{20}\rm{Ne}} + \nu_{e}$, ${^{20}\rm{O}} \to {^{20}\rm{F}} + {e^{-}} + \bar{\nu}_{e}$
+
+{{< details title="Implementation of ``ONe.net`` (Not a task)" closed="true" >}}
+Your net should have the following: 
+```fortran
+add_isos(
+    h1
+    he4
+    o16
+    ! for Ne20 - F20 - O20
+    ne20
+    f20
+    o20
+    ! for other accreted species
+    na23
+    mg24
+    mg25
+    ! for O ignition
+    si28
+)
+
+add_reactions(
+    ! for oxygen ignition
+    r1616
+    ! for Ne20 - F20 - O20
+    r_ne20_wk_f20
+    r_f20_wk-minus_ne20
+    r_f20_wk_o20
+    r_o20_wk-minus_f20
+)
+```
+
+{{< /details >}}
+
+{{< /tab >}}
+
+<!-- ONeMg.net -->
+{{< tab name="ONeMg.net" >}}
+Species: ${^{1}\rm{H}}$, ${^{4}\rm{He}}$, ${^{16}\rm{O}}$, ${^{20}\rm{Ne}}$, ${^{20}\rm{F}}$, ${^{20}\rm{O}}$, ${^{23}\rm{Na}}$, ${^{24}\rm{Mg}}$, ${^{24}\rm{Na}}$, ${^{24}\rm{Ne}}$, ${^{25}\rm{Mg}}$, ${^{28}\rm{Si}}$
+
+Reactions: 
+- **[Oxygen burning]** ${^{16}\rm{O}} + {^{16}\rm{O}} \to \rm{products}$ (specifically, the simplified reaction ```r1616```)
+- **[Ne20 EC chain]** ${^{20}\rm{Ne}} + {e^{-}} \to {^{20}\rm{F}} + \nu_{e}$, ${^{20}\rm{F}} \to {^{20}\rm{Ne}} + {e^{-}} + \bar{\nu}_{e}$
+- **[Ne20 EC chain]** ${^{20}\rm{F}} + {e^{-}} \to {^{20}\rm{Ne}} + \nu_{e}$, ${^{20}\rm{O}} \to {^{20}\rm{F}} + {e^{-}} + \bar{\nu}_{e}$
+- **[Mg24 EC chain]** ${^{24}\rm{Mg}} + {e^{-}} \to {^{24}\rm{Na}} + \nu_{e}$, ${^{24}\rm{Na}} \to {^{24}\rm{Mg}} + {e^{-}} + \bar{\nu}_{e}$
+- **[Mg24 EC chain]** ${^{24}\rm{Na}} + {e^{-}} \to {^{24}\rm{Ne}} + \nu_{e}$, ${^{24}\rm{Ne}} \to {^{24}\rm{Na}} + {e^{-}} + \bar{\nu}_{e}$
+
+{{< details title="Implementation of ``ONeMg.net`` (Not a task)" closed="true" >}}
+Your net should have the following: 
+```fortran
+add_isos(
+    h1
+    he4
+    o16
+    ! for Ne20 - F20 - O20
+    ne20
+    f20
+    o20
+    ! for Mg24 - Na24 - Ne24
+    mg24
+    na24
+    ne24
+    ! for other accreted species
+    na23
+    mg25
+    ! for O ignition
+    si28
+)
+
+add_reactions(
+    ! for oxygen ignition
+    r1616
+    ! for Ne20 - F20 - O20
+    r_ne20_wk_f20
+    r_f20_wk-minus_ne20
+    r_f20_wk_o20
+    r_o20_wk-minus_f20
+    ! for Mg24 - Na24 - Ne24
+    r_mg24_wk_na24
+    r_na24_wk-minus_mg24
+    r_na24_wk_ne24
+    r_ne24_wk-minus_na24
+)
+```
+
+{{< /details >}}
+{{< /tab >}}
+
+<!-- ONeNa.net -->
+{{< tab name="ONeNa.net" >}}
+
+Species to include: ${^{1}\rm{H}}$, ${^{4}\rm{He}}$, ${^{16}\rm{O}}$, ${^{20}\rm{Ne}}$, ${^{20}\rm{F}}$, ${^{20}\rm{O}}$, ${^{23}\rm{Na}}$, ${^{23}\rm{Ne}}$, ${^{24}\rm{Mg}}$, ${^{25}\rm{Mg}}$, ${^{28}\rm{Si}}$
+
+Reactions:
+- **[Oxygen burning]** ${^{16}\rm{O}} + {^{16}\rm{O}} \to \rm{products}$ (specifically, the simplified reaction ```r1616```)
+- **[Ne20 EC chain]** ${^{20}\rm{Ne}} + {e^{-}} \to {^{20}\rm{F}} + \nu_{e}$, ${^{20}\rm{F}} \to {^{20}\rm{Ne}} + {e^{-}} + \bar{\nu}_{e}$
+- **[Ne20 EC chain]** ${^{20}\rm{F}} + {e^{-}} \to {^{20}\rm{Ne}} + \nu_{e}$, ${^{20}\rm{O}} \to {^{20}\rm{F}} + {e^{-}} + \bar{\nu}_{e}$
+- **[Na23 Urca pair]** ${^{23}\rm{Na}} + {e^{-}} \to {^{23}\rm{Ne}} + \nu_{e}$, ${^{23}\rm{Ne}} \to {^{23}\rm{Ne}} + {e^{-}} + \bar{\nu}_{e}$
+
+{{< details title="Implementation of ``ONeNa.net`` (Not a task)" closed="true" >}}
+Your net should have the following: 
+```fortran
+add_isos(
+    h1
+    he4
+    o16
+    ! for Ne20 - F20 - O20
+    ne20
+    f20
+    o20
+    ! for Na23 - Ne23
+    na23
+    ne23
+    ! for other accreted species
+    mg24
+    mg25
+    ! for O ignition
+    si28
+)
+
+add_reactions(
+    ! for oxygen ignition
+    r1616
+    ! for Ne20 - F20 - O20
+    r_ne20_wk_f20
+    r_f20_wk-minus_ne20
+    r_f20_wk_o20
+    r_o20_wk-minus_f20
+    ! for Na23 - Ne23 pair
+    r_na23_wk_ne23
+    r_ne23_wk-minus_na23
+)
+```
+
+{{< /details >}}
+
+{{< /tab >}}
+
+<!-- ONeMgNa.net -->
+{{< tab name="ONeMgNa.net" >}}
+
+Species: ${^{1}\rm{H}}$, ${^{4}\rm{He}}$, ${^{16}\rm{O}}$, ${^{20}\rm{Ne}}$, ${^{20}\rm{F}}$, ${^{20}\rm{O}}$, ${^{23}\rm{Na}}$, ${^{23}\rm{Ne}}$, ${^{24}\rm{Mg}}$, ${^{24}\rm{Na}}$, ${^{24}\rm{Ne}}$, ${^{25}\rm{Mg}}$, ${^{28}\rm{Si}}$
+
+Reactions:
+- **[Oxygen burning]** ${^{16}\rm{O}} + {^{16}\rm{O}} \to \rm{products}$ (specifically, the simplified reaction ```r1616```)
+- **[Ne20 EC chain]** ${^{20}\rm{Ne}} + {e^{-}} \to {^{20}\rm{F}} + \nu_{e}$, ${^{20}\rm{F}} \to {^{20}\rm{Ne}} + {e^{-}} + \bar{\nu}_{e}$
+- **[Ne20 EC chain]** ${^{20}\rm{F}} + {e^{-}} \to {^{20}\rm{Ne}} + \nu_{e}$, ${^{20}\rm{O}} \to {^{20}\rm{F}} + {e^{-}} + \bar{\nu}_{e}$
+- **[Mg24 EC chain]** ${^{24}\rm{Mg}} + {e^{-}} \to {^{24}\rm{Na}} + \nu_{e}$, ${^{24}\rm{Na}} \to {^{24}\rm{Mg}} + {e^{-}} + \bar{\nu}_{e}$
+- **[Mg24 EC chain]** ${^{24}\rm{Na}} + {e^{-}} \to {^{24}\rm{Ne}} + \nu_{e}$, ${^{24}\rm{Ne}} \to {^{24}\rm{Na}} + {e^{-}} + \bar{\nu}_{e}$
+- **[Na23 Urca]** ${^{23}\rm{Na}} + {e^{-}} \to {^{23}\rm{Ne}} + \nu_{e}$, ${^{23}\rm{Ne}} \to {^{23}\rm{Ne}} + {e^{-}} + \bar{\nu}_{e}$
+
+{{< details title="Implementation of ``ONeMgNa.net`` (Not a task)" closed="true" >}}
+Your net should have the following: 
+```fortran
+add_isos(
+    h1
+    he4
+    o16
+    ! for Ne20 - F20 - O20
+    ne20
+    f20
+    o20
+    ! for Mg24 - Na24 - Ne24
+    mg24
+    na24
+    ne24
+    ! for Na23 - Ne23
+    na23
+    ne23
+    ! for other accreted species
+    mg25
+    ! for O ignition
+    si28
+)
+
+add_reactions(
+    ! for oxygen ignition
+    r1616
+    ! for Ne20 - F20 - O20
+    r_ne20_wk_f20
+    r_f20_wk-minus_ne20
+    r_f20_wk_o20
+    r_o20_wk-minus_f20
+    ! for Mg24 - Na24 - Ne24
+    r_mg24_wk_na24
+    r_na24_wk-minus_mg24
+    r_na24_wk_ne24
+    r_ne24_wk-minus_na24
+    ! for Na23 - Ne23 pair
+    r_na23_wk_ne23
+    r_ne23_wk-minus_na23
+)
+```
+
+{{< /details >}}
+
+{{< /tab >}}
+
+<!-- ONeMg2Na.net -->
+{{< tab name="ONeMg2Na.net" >}}
+
+Species: ${^{1}\rm{H}}$, ${^{4}\rm{He}}$, ${^{16}\rm{O}}$, ${^{20}\rm{Ne}}$, ${^{20}\rm{F}}$, ${^{20}\rm{O}}$, ${^{23}\rm{Na}}$, ${^{23}\rm{Ne}}$, ${^{24}\rm{Mg}}$, ${^{24}\rm{Na}}$, ${^{24}\rm{Ne}}$, ${^{25}\rm{Mg}}$, ${^{25}\rm{Na}}$, ${^{25}\rm{Ne}}$, ${^{28}\rm{Si}}$
+
+Reactions:
+- **[Oxygen burning]** ${^{16}\rm{O}} + {^{16}\rm{O}} \to \rm{products}$ (specifically, the simplified reaction ```r1616```)
+- **[Ne20 EC chain]** ${^{20}\rm{Ne}} + {e^{-}} \to {^{20}\rm{F}} + \nu_{e}$, ${^{20}\rm{F}} \to {^{20}\rm{Ne}} + {e^{-}} + \bar{\nu}_{e}$
+- **[Ne20 EC chain]** ${^{20}\rm{F}} + {e^{-}} \to {^{20}\rm{Ne}} + \nu_{e}$, ${^{20}\rm{O}} \to {^{20}\rm{F}} + {e^{-}} + \bar{\nu}_{e}$
+- **[Mg24 EC chain]** ${^{24}\rm{Mg}} + {e^{-}} \to {^{24}\rm{Na}} + \nu_{e}$, ${^{24}\rm{Na}} \to {^{24}\rm{Mg}} + {e^{-}} + \bar{\nu}_{e}$
+- **[Mg24 EC chain]** ${^{24}\rm{Na}} + {e^{-}} \to {^{24}\rm{Ne}} + \nu_{e}$, ${^{24}\rm{Ne}} \to {^{24}\rm{Na}} + {e^{-}} + \bar{\nu}_{e}$
+- **[Na23 Urca]** ${^{23}\rm{Na}} + {e^{-}} \to {^{23}\rm{Ne}} + \nu_{e}$, ${^{23}\rm{Ne}} \to {^{23}\rm{Ne}} + {e^{-}} + \bar{\nu}_{e}$
+- **[$A=25$ Urca]** ${^{25}\rm{Mg}} + {e^{-}} \to {^{25}\rm{Na}} + \nu_{e}$, ${^{25}\rm{Na}} \to {^{25}\rm{Mg}} + {e^{-}} + \bar{\nu}_{e}$
+- **[$A=25$ Urca]** ${^{25}\rm{Na}} + {e^{-}} \to {^{25}\rm{Ne}} + \nu_{e}$, ${^{25}\rm{Ne}} \to {^{25}\rm{Ne}} + {e^{-}} + \bar{\nu}_{e}$
+
+{{< details title="Implementation of ``ONeMg2Na.net`` (Not a task)" closed="true" >}}
+Your net should have the following: 
+```fortran
+add_isos(
+    h1
+    he4
+    o16
+    ! for Ne20 - F20 - O20
+    ne20
+    f20
+    o20
+    ! for Mg24 - Na24 - Ne24
+    mg24
+    na24
+    ne24
+    ! for Na23 - Ne23
+    na23
+    ne23
+    ! for Mg25 - Na25 - Ne25
+    mg25
+    na25
+    ne25
+    ! for O ignition
+    si28
+)
+
+add_reactions(
+    ! for oxygen ignition
+    r1616
+    ! for Ne20 - F20 - O20
+    r_ne20_wk_f20
+    r_f20_wk-minus_ne20
+    r_f20_wk_o20
+    r_o20_wk-minus_f20
+    ! for Mg24 - Na24 - Ne24
+    r_mg24_wk_na24
+    r_na24_wk-minus_mg24
+    r_na24_wk_ne24
+    r_ne24_wk-minus_na24
+    ! for Na23 - Ne23 pair
+    r_na23_wk_ne23
+    r_ne23_wk-minus_na23
+    ! for Mg25 - Na25 - Ne25
+    r_mg25_wk_na25
+    r_na25_wk-minus_mg25
+    r_na25_wk_ne25
+    r_ne25_wk-minus_na25
+)
+```
+
+{{< /details >}}
+
+{{< /tab >}}
+
+
+{{< /tabs >}}
+
 ### Step 4: Set reaction rate source
 
 So far we have been using the Suzuki et al. rates, but with new experimental and theoretical data, some of these rates could change. In this crowdsourcing exercise, some of you will be implementing custom rates provided by us, or ask MESA to calculate weak reaction rates on the fly. 
@@ -104,6 +389,8 @@ Check the Google spreadsheet [here](https://docs.google.com/spreadsheets/d/15PK9
 
 <!-- Suzuki rates -->
 {{< tab name="Suzuki Rates" >}}
+
+#### Suzuki Rates
 
 #### Step 4: Using Suzuki Rates
 
@@ -132,6 +419,8 @@ use_suzuki_weak_rates = .true.
 
 <!-- Custom weak rates -->
 {{< tab name="Custom Weak Rates" default="true" >}}
+
+#### Custom Weak Rates
 
 You can supply your own tabulated weak rates to MESA. Here we will show you how to use this feature. 
 
@@ -228,6 +517,8 @@ r_o20_wk-minus_f20 'on-the-fly_r_o20_wk-minus_f20.h5'
 
 <!-- Special rates -->
 {{< tab name="Special (on-the-fly) rates" >}}
+
+#### Special (On-the-fly) Weak Rates
 
 MESA has the capability to calculate the weak reactions on-the-fly, if you supply the list of transitions and energy levels. 
 
@@ -350,7 +641,7 @@ Now you're ready to go!
 ## Review reaction flow with pynucastro
 
 We can easily visualize the reaction flow with the ``pynucastro`` python package and build up some intuition. 
-Go to [this](blah) Google colab notebook and go through the exercises. 
+Go to [this](https://drive.google.com/file/d/1I3NQMQpB3Vsf-c8Yd40nggisLtOOTlzF/view?usp=sharing) Google colab notebook and go through the exercises. 
 
 ## Bonus exercises 
 
@@ -406,7 +697,7 @@ What other important reactions have we missed? Here we will use ``pynucastro`` t
 
 | 📋 TASK |
 |:--------|
-| **Go to [this]() Google collab**. **Use ``pynucastro``** to find out what isotopes and reactions are missing. **Edit your net** accordingly. |
+| **Go to [placeholder]() Google collab**. **Use ``pynucastro``** to find out what isotopes and reactions are missing. **Edit your net** accordingly. |
 
 
 | 📋 TASK |
@@ -651,6 +942,8 @@ In your ``extra_controls``, add ``s% other_timestep_limit => L1616_timestep_limi
 
 Now, we are ready to edit ``L1616_timestep_limit``. Our goal is to have MESA check the nuclear burning luminosity of the ${^{16}\rm{O}}+{^{16}\rm{O}}$ reaction, $L_{1616}$, and implement timestep limits based on how much $\log_{10} L_{1616}$ changes. 
 
+
+<!-- Task :  -->
 | 📋 TASK |
 |:--------|
 | Find the ``star_data`` variable that is related to nuclear burning luminosity of specific reaction categories. |
@@ -667,29 +960,31 @@ As you can see, the first index is for different categories of reactions, and th
 
 {{< /details >}}
 
+<!-- Task :  -->
 | 📋 TASK |
 |:--------|
-| Now that we have found the ``star_data`` variable for $L_{1616}$, edit ``L1616_timestep_limit`` to have it calculate the **global** change in $\log_{10} L_{1616}$. |
+| Now that we have found the ``star_data`` variable for $L_{1616}$, edit ``L1616_timestep_limit`` to have it calculate $\log_{10} (L_{1616}/L_{\odot})$ at end of the current timestep, call it ``log_L1616``. |
 
+<!-- Hint 1  -->
 {{< details title="Hint: what is the index for ${^{16}\rm{O}}+{^{16}\rm{O}}$ in the burning categories?" closed="true" >}}
 
-This is given by ``ioo``. 
+This is given by ``ioo``. However, ``ioo`` is defined elsewhere (in ``$MESA_DIR/chem/public/chem_def.f90``), and ``run_star_extras`` does not know about this definition beforehand. You need to declare
+```fortran
+use chem_def
+```
+at the top of the function. 
 
 {{< /details >}}
 
+<!-- Hint 2  -->
 {{< details title="Hint: which zone do we want?" closed="true" >}}
 
 Since we want the global change, we want the luminosity at the surface. The surface zone is zone `1`. 
 
 {{< /details >}}
 
-{{< details title="Hint: is there a similar ``star_data`` varaible for $L_{1616}$ at the start of timestep?" closed="true" >}}
-
-Yes, this is called ``luminosity_by_category``. 
-
-{{< /details >}}
-
-{{< details title="Partial solutions" closed="true" >}}
+<!-- Hint 3  -->
+{{< details title="Hint: how will the ``L1616_timestep_limit`` function know about the ``star_data``?" closed="true" >}}
 
 First, you need to call ``star_ptr``, so that the ``L1616_timestep_limit`` function knows about the ``s`` pointer. This requires declaring
 ```fortran
@@ -703,19 +998,133 @@ call star_ptr(id, s, ierr)
 if (ierr /= 0) return
 ```
 
-Next, you need to make sure that the function knows about the definiton of ``ioo``. This means declaring
-```fortran
-use chem_def
-```
-at the top of the function.
+{{< /details >}}
+
+<!-- Solutions -->
+
+{{< details title="Partial solutions" closed="true" >}}
 
 Your function should look like
 ```fortran
+integer function L1616_timestep_limit( &
+    id, skip_hard_limit, dt, dt_limit_ratio)
+    use const_def, only: dp
+    use star_def
+    use chem_def, only : ioo ! new
+    integer, intent(in) :: id
+    logical, intent(in) :: skip_hard_limit
+    real(dp), intent(in) :: dt
+    real(dp), intent(inout) :: dt_limit_ratio
+    real(dp) :: log_L1616 ! new
+    type (star_info), pointer :: s  ! new
+    integer :: ierr
+    ierr = 0
+    call star_ptr(id, s, ierr) ! new
+    if (ierr /= 0) return
+
+    L1616_timestep_limit = keep_going
+
+    ! new
+    log_L1616 = safe_log10(s% luminosity_by_category(ioo,1)/lsun)
+
+end function L1616_timestep_limit
 ```
 
-As you can see, the first index is for different categories of reactions, and the second index is for different zones in the stellar model. 
+{{< /details >}}
+
+<!-- Task :  -->
+| 📋 TASK |
+|:--------|
+| Edit ``L1616_timestep_limit`` to check whether $\log_{10}(L_{1616}/L_{\odot})$ is greater than -1.0. If not, have it return; we do not want to limit the timestep if the oxygen burning luminosity is tiny. |
+
+<!-- Partial solution  -->
+{{< details title="Partial solution" closed="true" >}}
+
+Your function should look like
+```fortran
+integer function L1616_timestep_limit( &
+    id, skip_hard_limit, dt, dt_limit_ratio)
+    use const_def, only: dp
+    use star_def
+    use chem_def, only : ioo
+    integer, intent(in) :: id
+    logical, intent(in) :: skip_hard_limit
+    real(dp), intent(in) :: dt
+    real(dp), intent(inout) :: dt_limit_ratio
+    real(dp) :: log_L1616
+    type (star_info), pointer :: s
+    integer :: ierr
+    ierr = 0
+    call star_ptr(id, s, ierr)
+    if (ierr /= 0) return
+
+    L1616_timestep_limit = keep_going
+
+    log_L1616 = safe_log10(s% luminosity_by_category(ioo,1)/lsun)
+
+    ! new
+    if (log_L1616 <= s% x_ctrl(1)) return
+
+end function L1616_timestep_limit
+```
 
 {{< /details >}}
+
+Now we are ready to calculate the change in $\log_{10}(L_{1616}/L_{\odot})$ at the start and end of the timestep. 
+
+<!-- Task :  -->
+| 📋 TASK |
+|:--------|
+| Edit ``L1616_timestep_limit`` to have it calculate $\log_{10} L_{1616}/L_{\odot}$ at **start** of the current timestep, call it ``log_L1616_start``. Then have the function calculate the change in $\log_{10} L_{1616}/L_{\odot}$ at this timestep. |
+
+<!-- Hint  -->
+{{< details title="Hint: is there a similar ``star_data`` varaible for $L_{1616}$ at the start of timestep?" closed="true" >}}
+
+Yes, this is called ``luminosity_by_category_start``. 
+
+{{< /details >}}
+
+<!-- Partial solution  -->
+{{< details title="Partial solution" closed="true" >}}
+
+Your function should look like
+```fortran
+integer function L1616_timestep_limit( &
+    id, skip_hard_limit, dt, dt_limit_ratio)
+    use const_def, only: dp
+    use star_def
+    use chem_def, only : ioo
+    integer, intent(in) :: id
+    logical, intent(in) :: skip_hard_limit
+    real(dp), intent(in) :: dt
+    real(dp), intent(inout) :: dt_limit_ratio
+    real(dp) :: log_L1616, log_L1616_start, dlog_L1616 ! new
+    type (star_info), pointer :: s
+    integer :: ierr
+    ierr = 0
+    call star_ptr(id, s, ierr)
+    if (ierr /= 0) return
+
+    L1616_timestep_limit = keep_going
+
+    log_L1616 = safe_log10(s% luminosity_by_category(ioo,1)/lsun)
+    if (log_L1616 <= s% x_ctrl(1)) return
+
+    ! new
+    log_L1616_start = safe_log10(s% luminosity_by_category_start(ioo,1)/lsun)
+    dlog_L1616 = abs(log_L1616_start - log_L1616)
+
+end function L1616_timestep_limit
+```
+
+{{< /details >}}
+
+
+<!-- Task -->
+| 📋 TASK |
+|:--------|
+| Now take a look at ``$MESA_DIR/star/private/timestep.f90`` and try to understand how it limits the timestep based on changes in quantities. Go to line 1007 and look at the ``check_lgL`` integer function, particularly lines 1110 to 1131. Implement these in your ``L1616_timestep_limit`` function.  |
+
 
 
 
@@ -772,6 +1181,38 @@ Of course, we lowered the overall spatial resolution by setting a large ``mesh_d
 
 > [!WARNING]
 > **Uncomment** the `xa_function*` options in ``inlist_common`` first. We want the resolution around Urca shells!
+
+{{< /tab >}}
+
+<!-- Skye EOS -->
+{{< tab name="Skye EOS" >}}
+
+#### Skye EOS
+
+In this lab, we have turned off the Skye EOS, in favor of the HELM EOS. They both cover the degenerate region, but Skye EOS has better treatment of Coulomb effects in these dense regions. Sadly, better physics (thermodynamics) sometimes means more convergence issues. So to speed things up, we turned off Skye EOS. 
+
+> [!IMPORTANT]
+> For low accretion rates (like $10^{-8}M_{\odot}\rm{yr}^{-1}$), Urca cooling will cool the core sufficiently that it reaches crystallization. The thermodynamics of crystallization, and Coulomb effects under degenerate coniditions, are more properly treated with the Skye EOS, so it is important to consider using Skye EOS. 
+
+| 📋 TASK |
+|:--------|
+| **Set ``use_Skye = .true.``** in ``inlist_common``, and **run MESA again**. Check if the evolution is any different. |
+
+> [!WARNING]
+> Make sure you do ``./clean`` and ``./mk`` first. 
+
+> [!IMPORTANT]
+> We recommend $\dot{M} > 10^{-7} M_{\odot} \rm{yr}^{-1}$ (``mass_change = 1d-7`` or greater). Lower values will result in hours-long runs because the Coulomb effects are stronger and there are more convergence issues. 
+
+> [!NOTE]
+> We also set ``mass_fraction_limit_for_Skye = 1d-10``. By default, this is ``1d-4``. We lowered this number so that the EOS considers even trace elements on the thermodynamics. We do not recommend even lower values. 
+
+{{< /tab >}}
+
+<!-- Name your bison -->
+{{< tab name="Name your bison" >}}
+
+Go to the Google spreadsheet [here](https://docs.google.com/spreadsheets/d/15PK9myW3oriuTeZvGFNGRKHqqphOHUFQoOcShtuME-g/edit?usp=sharing) and add names of your bison. Our lecturer Mike will reward valuable MESA summer school points for his favorite name(s). 
 
 {{< /tab >}}
 
