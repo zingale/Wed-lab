@@ -1035,7 +1035,7 @@ end function L1616_timestep_limit
 <!-- Task :  -->
 | 📋 TASK |
 |:--------|
-| Edit ``L1616_timestep_limit`` to check whether $\log_{10}(L_{1616}/L_{\odot})$ is greater than -1.0. If not, have it return; we do not want to limit the timestep if the oxygen burning luminosity is tiny. |
+| Edit ``L1616_timestep_limit`` to check whether $\log_{10}(L_{1616}/L_{\odot})$ is greater than a minimum value of $-1.0$. If not, have it return; we do not want to limit the timestep if the oxygen burning luminosity is tiny. Implement this minimum using the inlist ``x_ctrl`` options. |
 
 <!-- Partial solution  -->
 {{< details title="Partial solution" closed="true" >}}
@@ -1068,6 +1068,9 @@ integer function L1616_timestep_limit( &
 end function L1616_timestep_limit
 ```
 
+> [!WARNING]
+> You should add ``x_ctrl(1) = -1d0`` somewhere in the ``&controls`` section of your inlist. 
+
 {{< /details >}}
 
 Now we are ready to calculate the change in $\log_{10}(L_{1616}/L_{\odot})$ at the start and end of the timestep. 
@@ -1078,7 +1081,7 @@ Now we are ready to calculate the change in $\log_{10}(L_{1616}/L_{\odot})$ at t
 | Edit ``L1616_timestep_limit`` to have it calculate $\log_{10} L_{1616}/L_{\odot}$ at **start** of the current timestep, call it ``log_L1616_start``. Then have the function calculate the change in $\log_{10} L_{1616}/L_{\odot}$ at this timestep. |
 
 <!-- Hint  -->
-{{< details title="Hint: is there a similar ``star_data`` varaible for $L_{1616}$ at the start of timestep?" closed="true" >}}
+{{< details title="Hint: is there a similar ``star_data`` variable for $L_{1616}$ at the start of timestep?" closed="true" >}}
 
 Yes, this is called ``luminosity_by_category_start``. 
 
@@ -1123,12 +1126,16 @@ end function L1616_timestep_limit
 <!-- Task -->
 | 📋 TASK |
 |:--------|
-| Now take a look at ``$MESA_DIR/star/private/timestep.f90`` and try to understand how it limits the timestep based on changes in quantities. Go to line 1007 and look at the ``check_lgL`` integer function, particularly lines 1110 to 1131. Implement these in your ``L1616_timestep_limit`` function.  |
+| Now take a look at ``$MESA_DIR/star/private/timestep.f90`` and try to understand how it limits the timestep based on changes in quantities. Go to line 1007 and look at the ``check_lgL`` integer function, particularly lines 1110 to 1131. Implement these in your ``L1616_timestep_limit`` function. We will limit the change in $\log_{10}(L_{1616}/L_{\odot})$ to some value ``lim = 0.02d0``, which you should implement with the inlist ``x_ctrl`` options. |
 
 <!-- Partial solution  -->
 {{< details title="Partial solution" closed="true" >}}
 
-We will define a
+We will define a variable ``lim`` that stores the value of ``x_ctrl(2)``, which is the change in $\log_{10}(L_{1616}/L_{\odot})$ allowed between timesteps. 
+
+Next, we will define a variable ``relative_excess = (dlog_L1616 - lim) / lim``, which is relatively how much the change in $\log_{10}(L_{1616}/L_{\odot})$ is, in excess of our target value ``lim``. 
+
+Finally, we modify the value of ``dt_limit_ratio``, which is passed into and out of the function. This tells MESA how much we want to limit the timestep ``dt``. We calculate this following the functions in ``$MESA_DIR/star/private/timestep.f90``. 
 
 Your function should look like
 ```fortran
@@ -1141,7 +1148,8 @@ integer function L1616_timestep_limit( &
     logical, intent(in) :: skip_hard_limit
     real(dp), intent(in) :: dt
     real(dp), intent(inout) :: dt_limit_ratio
-    real(dp) :: log_L1616, log_L1616_start, dlog_L1616 ! new
+    real(dp) :: log_L1616, log_L1616_start, dlog_L1616
+    real(dp) :: lim, relative_excess ! new
     type (star_info), pointer :: s
     integer :: ierr
     ierr = 0
@@ -1152,18 +1160,37 @@ integer function L1616_timestep_limit( &
 
     log_L1616 = safe_log10(s% luminosity_by_category(ioo,1)/lsun)
     if (log_L1616 <= s% x_ctrl(1)) return
-
-    ! new
     log_L1616_start = safe_log10(s% luminosity_by_category_start(ioo,1)/lsun)
     dlog_L1616 = abs(log_L1616_start - log_L1616)
 
+    ! new
+    lim = s% x_ctrl(2)
+    relative_excess = (dlog_L1616 - lim) / lim
+    dt_limit_ratio = 1d0/pow(s% timestep_dt_factor,relative_excess)
+    if (dt_limit_ratio <= 1d0) dt_limit_ratio = 0
+
 end function L1616_timestep_limit
 ```
+> [!WARNING]
+> You should add ``x_ctrl(2) = 0.05d0`` somewhere in the ``&controls`` section of your inlist. 
 
 {{< /details >}}
 
 
+Now we are ready to run and test whether our ``L1616_timestep_limit`` function works. 
+<!-- Task -->
+| 📋 TASK |
+|:--------|
+| Compile and run MESA. Check the terminal to see if the timestep is limited by ``other_timestep`` towards the end. |
+
+> [!WARNING]
+> Did you set ``use_other_timestep_limit = .true.``, ``x_ctrl(1) = -1d0``, and ``x_ctrl(2) = 0.02d0`` in the ``&controls`` section of your inlist? 
+
+> [!TIP]
+> You can ask MESA to print out the value of $\log_{10}(L_{1616}/L_{\odot})$, to make sure that the changes in this quantity are small between timesteps towards the end. 
+
 {{< /tab >}}
+
 
 <!-- spatial resolution -->
 {{< tab name="Spatial Resolution" >}}
