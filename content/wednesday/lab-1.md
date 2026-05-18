@@ -97,11 +97,11 @@ At this stage, we are now ready to dive into some inlists!
 
 Now let's look over the file. You will notice that some variables have already been set to more aggressively relax tolerances and help the model converge at later times. Check the aside below **after** the lab for more details on particular choices in this file. [^Potekhin09] [^Itoh02] [^Jermyn21] [^Timmes00]
 
-{{< details title="Aside on miscellanous variable choices in `inlist_common`" closed="true" >}}
+{{< details title="Aside on miscellaneous variable choices in `inlist_common`" closed="true" >}}
 
 The work that will be done throughout this lab requires careful consideration of input physics for real science cases. Much of this has been smoothed over for the sake of brevity, as many of the necessary inputs would also scale up runtimes, but some important eos and coulomb correction details have been retained.
 
-IN `&star_job`, we are using couloumb corrections from Potekhin+09 <sup id="fnref:Potekhin09"><a href="#fn:8" class="footnote-ref">8</a></sup>. for ions and Itoh+02<sup id="fnref:Itoh02"><a href="#fn:9" class="footnote-ref">9</a></sup> for electrons. These provide modifications to the ion and electron chemical potentials due to couloumb coupling and screening, respectively. In the ONe white dwarf regime of the these corrections become essential pieces on the rate and balance of URCA production. 
+IN `&star_job`, we are using coulomb corrections from Potekhin+09 <sup id="fnref:Potekhin09"><a href="#fn:8" class="footnote-ref">8</a></sup>. for ions and Itoh+02<sup id="fnref:Itoh02"><a href="#fn:9" class="footnote-ref">9</a></sup> for electrons. These provide modifications to the ion and electron chemical potentials due to coulomb coupling and screening, respectively. In the ONe white dwarf regime of the these corrections become essential pieces on the rate and balance of URCA production. 
 
 In `&eos`, the inlist is effectively forcing the use of the proper equation of state, Skye, throughout the core of the white dwarf, while dropping fidelity in the non-degenerate outer shell. The other eos options (PC, FreeEOS, and OPAL/SCVH) are explicitly deactivated, while dropping the mass fraction needed to consider an isotope in the Skye EOS. The means that in the portions of the star where Skye is not appropriate, MESA jumps down the order of precedence for EOS components directly to HELM, reducing runtimes. Note, the backstop eos, HELM, cannot be deactivated and (again) will still be the dominant eos in the outermost layers of non-degenerate accreted material (~5 km or ~0.4%). The explicit details of the Skye EOS and HELM EOS can be found in Jermyn+21 <sup id="fnref:Jermyn21"><a href="#fn:10" class="footnote-ref">10</a></sup> . and Timmes&Swesty00 <sup id="fnref:Timmes00"><a href="#fn:11" class="footnote-ref">11</a></sup>. 
 
@@ -585,7 +585,7 @@ Using these values, the script then will allocate the necessary arrays and gathe
 
 {{< details title="Aside: How is this loop getting lambda?" closed="true" >}}
 
-In a fairly broad description, the code is looping through every zone of the star starting at the outermost portion (k = 1). At each step, we first make a call to explicitly evaluate the equation of state at that zone. This includes local values of things like temperature, pressure, and electron chemical potential along with their derivatives. Next, a relevant `Coulomb_Info` structure is set to hold the necessary set of local values used in the calculation of couloumb corrections and populated. Finally, the capture rates for each reaction are evaluated. This evaluation populates values at a set of pointers for our use including lambda, Q (total thermal energy), and Qneu (thermal energy going to neutrinos).  Most of these pointers are being ignored in this particular lab.
+In a fairly broad description, the code is looping through every zone of the star starting at the outermost portion (k = 1). At each step, we first make a call to explicitly evaluate the equation of state at that zone. This includes local values of things like temperature, pressure, and electron chemical potential along with their derivatives. Next, a relevant `Coulomb_Info` structure is set to hold the necessary set of local values used in the calculation of coulomb corrections and populated. Finally, the capture rates for each reaction are evaluated. This evaluation populates values at a set of pointers for our use including lambda, Q (total thermal energy), and Qneu (thermal energy going to neutrinos).  Most of these pointers are being ignored in this particular lab.
 
 {{< /details >}}
 
@@ -601,7 +601,7 @@ In a fairly broad description, the code is looping through every zone of the sta
 
 {{< details title="Hint: What is the format of a do loop?" closed="true" >}}
 ```fortran
-do i = minumum, maximum 
+do i = minimum, maximum 
    x = y
 end do
 ```
@@ -641,7 +641,7 @@ With all the inlists complete, we can finally answer the age old question: **Wil
 |:--------|
 | **Run** the model! Observe the behavior and evolution of the star up to oxygen ignition. Does the balance of lambda values make sense? Does the crossing point agree with Figure 4 from Pinedo+14[^MartinezPinedo14] (below)? |
 ![landscape](/wednesday/Pinedo+14_Fig4.png)
-*Figure 4, from Pinedo+14: Electon capture and beta decay rates on $\ce{^{20}Ne<->^{20}F}$ with and without screening. Top panel log(T[K]) = 8.6. Bottom panel log(T[K]) = 9.0* [^MartinezPinedo14]
+*Figure 4, from Pinedo+14: Electron capture and beta decay rates on $\ce{^{20}Ne<->^{20}F}$ with and without screening. Top panel log(T[K]) = 8.6. Bottom panel log(T[K]) = 9.0* [^MartinezPinedo14]
 
 
 > [!IMPORTANT]
@@ -657,7 +657,7 @@ Note: This gif stacks both the pgstar plots, but they will be separate during th
 {{< /details >}}
 
 {{< details title="Answer: Does the lambda balance make sense?" closed="true" >}}
-Yes! Broadly, we should expect $\lambda_{^{20}Ne->^{20}F}$ to be greater than $\lambda_{^{20}F->^{20}Ne}$ at high densities due to the effects of pauli blocking. At lower densities, the opposite should be true as $^{20}F$ spontaneously decays wihout enough energy to do electron capture on $^{20}Ne$.
+Yes! Broadly, we should expect $\lambda_{^{20}Ne->^{20}F}$ to be greater than $\lambda_{^{20}F->^{20}Ne}$ at high densities due to the effects of pauli blocking. At lower densities, the opposite should be true as $^{20}F$ spontaneously decays without enough energy to do electron capture on $^{20}Ne$.
 
 Further, the crossing point of the two curves generally agrees with the work of Pinedo+14 when looking at the values in the associated profile columns (or by eye). The profile columns provide a crossing point at log($\rho$) ~ 9.86 and log(T)~8.9. With a simple interpolation on the two panels of figure 4 from Pinedo+14, we can suspect that with log(T)~8.9, this matches the crossing point. (Note: Ye = 0.5 for our ONe white dwarf)
 

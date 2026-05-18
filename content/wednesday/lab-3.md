@@ -329,7 +329,7 @@ log_directory = "LOGS_1d-6_ONe_custom"
 
 Now you're ready to go!
 
-### Step 6: Declaring Bankrupcy
+### Step 6: Declaring Bankruptcy
 
 | 📋 TASK 6 |
 |:--------|
@@ -683,7 +683,7 @@ Since we want the global change, we want the luminosity at the surface. The surf
 
 {{< /details >}}
 
-{{< details title="Hint: is there a similar ``star_data`` varaible for $L_{1616}$ at the start of timestep?" closed="true" >}}
+{{< details title="Hint: is there a similar ``star_data`` variable for $L_{1616}$ at the start of timestep?" closed="true" >}}
 
 Yes, this is called ``luminosity_by_category``. 
 
@@ -703,7 +703,7 @@ call star_ptr(id, s, ierr)
 if (ierr /= 0) return
 ```
 
-Next, you need to make sure that the function knows about the definiton of ``ioo``. This means declaring
+Next, you need to make sure that the function knows about the definition of ``ioo``. This means declaring
 ```fortran
 use chem_def
 ```
