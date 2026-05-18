@@ -1,0 +1,19 @@
+{{- $dest := .Destination -}}
+
+{{- $isLocal := not (urls.Parse $dest).Scheme -}}
+{{- $isPage := and (eq .Page.Kind "page") (not .Page.BundleType) -}}
+{{- $startsWithSlash := hasPrefix $dest "/" -}}
+{{- $startsWithRelative := hasPrefix $dest "../" -}}
+{{- $isFragment := hasPrefix $dest "#" -}}
+
+{{- if and $dest $isLocal (not $isFragment) -}}
+  {{- if $startsWithSlash -}}
+    {{- $dest = (relURL (strings.TrimPrefix "/" $dest)) -}}
+  {{- else if and $isPage (not $startsWithRelative) -}}
+    {{ $dest = (printf "../%s" $dest) }}
+  {{- end -}}
+{{- end -}}
+
+{{- with . -}}
+  <a href="{{ $dest | safeURL }}" {{ with .Title }}title="{{ . }}"{{ end }}{{ if strings.HasPrefix .Destination "http" }}target="_blank" rel="noopener"{{ end }}>{{ .Text | safeHTML }}</a>
+{{- end -}}
