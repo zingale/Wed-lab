@@ -9,7 +9,7 @@ disableKinds: "rss"
 ## Introduction
 
 In Lab 1 you built a minimal nuclear network for an accreting ONe white dwarf and watched the core march toward oxygen ignition.
-But there is important physics we left out: **the URCA process**.
+But there is important physics we left out: **the Urca process**.
 
 In sufficiently degenerate matter, certain nuclei can undergo cyclic electron captures and beta decays at a specific **threshold density** — a so-called *Urca shell*.
 Each cycle emits two neutrinos that carry energy directly out of the star, providing a potentially significant cooling (or heating) mechanism that depends sensitively on the accretion rate.
