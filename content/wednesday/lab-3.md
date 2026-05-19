@@ -19,7 +19,7 @@ The goal is to look at how they change the core properties at the onset of oxyge
 
 | 📋 TASK 1 |
 |:--------|
-| **Download** the starting point from the [Google Drive]( FIXLINK ) to a local working directory. |
+| **Download** the starting point from the [Google Drive]( https://drive.google.com/file/d/1T7yvdHgni1wipdopA925505jwcPr-MNk/view?usp=drive_link ) to a local working directory. |
 
 The starting point is a very simple setup. It should look like:
 
