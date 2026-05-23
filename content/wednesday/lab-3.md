@@ -104,7 +104,7 @@ Species: ${^{1}\rm{H}}$, ${^{4}\rm{He}}$, ${^{16}\rm{O}}$, ${^{20}\rm{Ne}}$, ${^
 Reactions: 
 - **[Oxygen burning]** ${^{16}\rm{O}} + {^{16}\rm{O}} \to \rm{products}$ (specifically, the simplified reaction ```r1616```)
 - **[Ne20 EC chain]** ${^{20}\rm{Ne}} + {e^{-}} \to {^{20}\rm{F}} + \nu_{e}$, ${^{20}\rm{F}} \to {^{20}\rm{Ne}} + {e^{-}} + \bar{\nu}_{e}$
-- **[Ne20 EC chain]** ${^{20}\rm{F}} + {e^{-}} \to {^{20}\rm{Ne}} + \nu_{e}$, ${^{20}\rm{O}} \to {^{20}\rm{F}} + {e^{-}} + \bar{\nu}_{e}$
+- **[F20 EC chain]** ${^{20}\rm{F}} + {e^{-}} \to {^{20}\rm{O}} + \nu_{e}$, ${^{20}\rm{O}} \to {^{20}\rm{F}} + {e^{-}} + \bar{\nu}_{e}$
 
 {{< details title="Implementation of ``ONe.net`` (Not a task)" closed="true" >}}
 Your net should have the following: 
@@ -147,9 +147,9 @@ Species: ${^{1}\rm{H}}$, ${^{4}\rm{He}}$, ${^{16}\rm{O}}$, ${^{20}\rm{Ne}}$, ${^
 Reactions: 
 - **[Oxygen burning]** ${^{16}\rm{O}} + {^{16}\rm{O}} \to \rm{products}$ (specifically, the simplified reaction ```r1616```)
 - **[Ne20 EC chain]** ${^{20}\rm{Ne}} + {e^{-}} \to {^{20}\rm{F}} + \nu_{e}$, ${^{20}\rm{F}} \to {^{20}\rm{Ne}} + {e^{-}} + \bar{\nu}_{e}$
-- **[Ne20 EC chain]** ${^{20}\rm{F}} + {e^{-}} \to {^{20}\rm{Ne}} + \nu_{e}$, ${^{20}\rm{O}} \to {^{20}\rm{F}} + {e^{-}} + \bar{\nu}_{e}$
+- **[F20 EC chain]** ${^{20}\rm{F}} + {e^{-}} \to {^{20}\rm{O}} + \nu_{e}$, ${^{20}\rm{O}} \to {^{20}\rm{F}} + {e^{-}} + \bar{\nu}_{e}$
 - **[Mg24 EC chain]** ${^{24}\rm{Mg}} + {e^{-}} \to {^{24}\rm{Na}} + \nu_{e}$, ${^{24}\rm{Na}} \to {^{24}\rm{Mg}} + {e^{-}} + \bar{\nu}_{e}$
-- **[Mg24 EC chain]** ${^{24}\rm{Na}} + {e^{-}} \to {^{24}\rm{Ne}} + \nu_{e}$, ${^{24}\rm{Ne}} \to {^{24}\rm{Na}} + {e^{-}} + \bar{\nu}_{e}$
+- **[Na24 EC chain]** ${^{24}\rm{Na}} + {e^{-}} \to {^{24}\rm{Ne}} + \nu_{e}$, ${^{24}\rm{Ne}} \to {^{24}\rm{Na}} + {e^{-}} + \bar{\nu}_{e}$
 
 {{< details title="Implementation of ``ONeMg.net`` (Not a task)" closed="true" >}}
 Your net should have the following: 
@@ -200,8 +200,8 @@ Species to include: ${^{1}\rm{H}}$, ${^{4}\rm{He}}$, ${^{16}\rm{O}}$, ${^{20}\rm
 Reactions:
 - **[Oxygen burning]** ${^{16}\rm{O}} + {^{16}\rm{O}} \to \rm{products}$ (specifically, the simplified reaction ```r1616```)
 - **[Ne20 EC chain]** ${^{20}\rm{Ne}} + {e^{-}} \to {^{20}\rm{F}} + \nu_{e}$, ${^{20}\rm{F}} \to {^{20}\rm{Ne}} + {e^{-}} + \bar{\nu}_{e}$
-- **[Ne20 EC chain]** ${^{20}\rm{F}} + {e^{-}} \to {^{20}\rm{Ne}} + \nu_{e}$, ${^{20}\rm{O}} \to {^{20}\rm{F}} + {e^{-}} + \bar{\nu}_{e}$
-- **[Na23 Urca pair]** ${^{23}\rm{Na}} + {e^{-}} \to {^{23}\rm{Ne}} + \nu_{e}$, ${^{23}\rm{Ne}} \to {^{23}\rm{Ne}} + {e^{-}} + \bar{\nu}_{e}$
+- **[F20 EC chain]** ${^{20}\rm{F}} + {e^{-}} \to {^{20}\rm{O}} + \nu_{e}$, ${^{20}\rm{O}} \to {^{20}\rm{F}} + {e^{-}} + \bar{\nu}_{e}$
+- **[Na23 Urca pair]** ${^{23}\rm{Na}} + {e^{-}} \to {^{23}\rm{Ne}} + \nu_{e}$, ${^{23}\rm{Ne}} \to {^{23}\rm{Na}} + {e^{-}} + \bar{\nu}_{e}$
 
 {{< details title="Implementation of ``ONeNa.net`` (Not a task)" closed="true" >}}
 Your net should have the following: 
@@ -250,10 +250,10 @@ Species: ${^{1}\rm{H}}$, ${^{4}\rm{He}}$, ${^{16}\rm{O}}$, ${^{20}\rm{Ne}}$, ${^
 Reactions:
 - **[Oxygen burning]** ${^{16}\rm{O}} + {^{16}\rm{O}} \to \rm{products}$ (specifically, the simplified reaction ```r1616```)
 - **[Ne20 EC chain]** ${^{20}\rm{Ne}} + {e^{-}} \to {^{20}\rm{F}} + \nu_{e}$, ${^{20}\rm{F}} \to {^{20}\rm{Ne}} + {e^{-}} + \bar{\nu}_{e}$
-- **[Ne20 EC chain]** ${^{20}\rm{F}} + {e^{-}} \to {^{20}\rm{Ne}} + \nu_{e}$, ${^{20}\rm{O}} \to {^{20}\rm{F}} + {e^{-}} + \bar{\nu}_{e}$
+- **[F20 EC chain]** ${^{20}\rm{F}} + {e^{-}} \to {^{20}\rm{O}} + \nu_{e}$, ${^{20}\rm{O}} \to {^{20}\rm{F}} + {e^{-}} + \bar{\nu}_{e}$
 - **[Mg24 EC chain]** ${^{24}\rm{Mg}} + {e^{-}} \to {^{24}\rm{Na}} + \nu_{e}$, ${^{24}\rm{Na}} \to {^{24}\rm{Mg}} + {e^{-}} + \bar{\nu}_{e}$
-- **[Mg24 EC chain]** ${^{24}\rm{Na}} + {e^{-}} \to {^{24}\rm{Ne}} + \nu_{e}$, ${^{24}\rm{Ne}} \to {^{24}\rm{Na}} + {e^{-}} + \bar{\nu}_{e}$
-- **[Na23 Urca]** ${^{23}\rm{Na}} + {e^{-}} \to {^{23}\rm{Ne}} + \nu_{e}$, ${^{23}\rm{Ne}} \to {^{23}\rm{Ne}} + {e^{-}} + \bar{\nu}_{e}$
+- **[Na24 EC chain]** ${^{24}\rm{Na}} + {e^{-}} \to {^{24}\rm{Ne}} + \nu_{e}$, ${^{24}\rm{Ne}} \to {^{24}\rm{Na}} + {e^{-}} + \bar{\nu}_{e}$
+- **[Na23 Urca]** ${^{23}\rm{Na}} + {e^{-}} \to {^{23}\rm{Ne}} + \nu_{e}$, ${^{23}\rm{Ne}} \to {^{23}\rm{Na}} + {e^{-}} + \bar{\nu}_{e}$
 
 {{< details title="Implementation of ``ONeMgNa.net`` (Not a task)" closed="true" >}}
 Your net should have the following: 
@@ -310,10 +310,10 @@ Species: ${^{1}\rm{H}}$, ${^{4}\rm{He}}$, ${^{16}\rm{O}}$, ${^{20}\rm{Ne}}$, ${^
 Reactions:
 - **[Oxygen burning]** ${^{16}\rm{O}} + {^{16}\rm{O}} \to \rm{products}$ (specifically, the simplified reaction ```r1616```)
 - **[Ne20 EC chain]** ${^{20}\rm{Ne}} + {e^{-}} \to {^{20}\rm{F}} + \nu_{e}$, ${^{20}\rm{F}} \to {^{20}\rm{Ne}} + {e^{-}} + \bar{\nu}_{e}$
-- **[Ne20 EC chain]** ${^{20}\rm{F}} + {e^{-}} \to {^{20}\rm{Ne}} + \nu_{e}$, ${^{20}\rm{O}} \to {^{20}\rm{F}} + {e^{-}} + \bar{\nu}_{e}$
+- **[F20 EC chain]** ${^{20}\rm{F}} + {e^{-}} \to {^{20}\rm{O}} + \nu_{e}$, ${^{20}\rm{O}} \to {^{20}\rm{F}} + {e^{-}} + \bar{\nu}_{e}$
 - **[Mg24 EC chain]** ${^{24}\rm{Mg}} + {e^{-}} \to {^{24}\rm{Na}} + \nu_{e}$, ${^{24}\rm{Na}} \to {^{24}\rm{Mg}} + {e^{-}} + \bar{\nu}_{e}$
-- **[Mg24 EC chain]** ${^{24}\rm{Na}} + {e^{-}} \to {^{24}\rm{Ne}} + \nu_{e}$, ${^{24}\rm{Ne}} \to {^{24}\rm{Na}} + {e^{-}} + \bar{\nu}_{e}$
-- **[Na23 Urca]** ${^{23}\rm{Na}} + {e^{-}} \to {^{23}\rm{Ne}} + \nu_{e}$, ${^{23}\rm{Ne}} \to {^{23}\rm{Ne}} + {e^{-}} + \bar{\nu}_{e}$
+- **[Na24 EC chain]** ${^{24}\rm{Na}} + {e^{-}} \to {^{24}\rm{Ne}} + \nu_{e}$, ${^{24}\rm{Ne}} \to {^{24}\rm{Na}} + {e^{-}} + \bar{\nu}_{e}$
+- **[Na23 Urca]** ${^{23}\rm{Na}} + {e^{-}} \to {^{23}\rm{Ne}} + \nu_{e}$, ${^{23}\rm{Ne}} \to {^{23}\rm{Na}} + {e^{-}} + \bar{\nu}_{e}$
 - **[$A=25$ Urca]** ${^{25}\rm{Mg}} + {e^{-}} \to {^{25}\rm{Na}} + \nu_{e}$, ${^{25}\rm{Na}} \to {^{25}\rm{Mg}} + {e^{-}} + \bar{\nu}_{e}$
 - **[$A=25$ Urca]** ${^{25}\rm{Na}} + {e^{-}} \to {^{25}\rm{Ne}} + \nu_{e}$, ${^{25}\rm{Ne}} \to {^{25}\rm{Ne}} + {e^{-}} + \bar{\nu}_{e}$
 
@@ -373,6 +373,10 @@ add_reactions(
 
 
 {{< /tabs >}}
+
+The largest of these networks appears as:
+
+![largest net](onemg2na-net.png)
 
 ### Step 4: Set reaction rate source
 

@@ -308,6 +308,15 @@ In pursuit of our central question, "implode or explode", the critical physics i
 
 To implement this physics into our ONe white dwarf, start by creating the new `ONe.net` file in the working directory and adding the necessary isotopes.
 
+Visually this network looks like:
+
+![basic ONe net](one-net.png)
+
+The gray ${}^{31}\mathrm{P}$ nucleus is not explicitly carried in the network, but we include the link
+${}^{16}\mathrm{O}({}^{16}\mathrm{O},p){}^{31}\mathrm{P}(p,\alpha){}^{28}\mathrm{Si}$ as an alternate
+pathway to ${}^{16}\mathrm{O}({}^{16}\mathrm{O},\alpha){}^{28}\mathrm{Si}$ for oxygen burning (this
+is included in the MESA rate we use.
+
 | 📋 TASK 7 |
 |:--------|
 | **Create a new file `ONe.net`**, and **add the necessary isotopes** to encompass the reactions in the table above. |

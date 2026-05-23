@@ -90,6 +90,10 @@ To model the A=23 Urca pair we need to add both isotopes and their connecting we
 > - Electron capture: $^{23}_{11}\mathrm{Na} + e^- \to {^{23}_{10}\mathrm{Ne}} + \nu_e$
 > - Beta decay: $^{23}_{10}\mathrm{Ne} \to {^{23}_{11}\mathrm{Na}} + e^- + \bar{\nu}_e$
 
+Visually this network look like:
+
+![ONeNe net](onena-net.png)
+
 {{< details title="Hint: What isotopes and reactions to add?" closed="true" >}}
 Add to `add_isos(...)`:
 - `na23`
@@ -207,6 +211,9 @@ It consists of a two-step electron capture chain:
 $$^{25}_{12}\mathrm{Mg} + e^- \to {^{25}_{11}\mathrm{Na}} + \nu_e \quad \text{then} \quad {^{25}_{11}\mathrm{Na}} + e^- \to {^{25}_{10}\mathrm{Ne}} + \nu_e$$
 and the reverse beta decays.
 
+Visually, this network appears as:
+
+![ONeNaMg net](onenamg-net.png)
 
 ### Step 4: Build the ONeNaMg25 Network
 
