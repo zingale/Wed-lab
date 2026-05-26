@@ -463,7 +463,7 @@ use_suzuki_weak_rates = .false.
 
 | 📋 TASK 4b |
 |:--------|
-| **Download** the weak rate tables [here](https://drive.google.com/file/d/1qtQLwOf2qovA8pI5miiD6kxgNBJVe28x/view?usp=drive_link) to your working directory and **unzip** it. |
+| **Download** the weak rate tables [here](https://drive.google.com/file/d/1R9DOoAh8IkojyJa752aPxKLLUNlwf8nu/view?usp=drive_link) to your working directory and **unzip** it. |
 
 After that, your working directory should look like:
 
