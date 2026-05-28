@@ -34,7 +34,7 @@ As we accrete, the density throughout the WD increases, allowing for electron ca
 
 Lectures giving the background on white dwarfs, nuclear reactions,
 and the conditions for Urca will be provided as a set of Jupyter notebooks.
-You can read through (or run via Jupyter) the [collection of lecture notes](https://zingale.github.io/mesa-labs/)
+You can read through (or run via Jupyter) the [collection of lecture notes](https://zingale.github.io/mesa-labs/).
 
 
 ## Lab modules
