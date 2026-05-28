@@ -620,7 +620,7 @@ log_directory = "LOGS_1d-6_ONe_custom"
 
 Now you're ready to go!
 
-### Step 6: Declaring Bankrupcy
+### Step 6: Declaring Bankruptcy
 
 | 📋 TASK 6 |
 |:--------|
